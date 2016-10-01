@@ -79,5 +79,9 @@ export PYTHONPATH=$PYTHONPATH:$HOME/KitWare/VTK/VTK_git/build/Wrapping/Python/vt
 
 export TERM=xterm-256color
 export PATH=$PATH:$HOME/opt/neovim-qt/build/bin
+export LLVM_CONFIG=/usr/bin/llvm-config
 
 setxkbmap -option grp:alt_shift_toggle us,de
+
+# Gruvbox true colors "
+source "$HOME/.vim/plugged/gruvbox/gruvbox_256palette.sh"

@@ -29,7 +29,7 @@ override_utf8_locale no
 
 # number of cpu samples to average
 # set to 1 to disable averaging
-cpu_avg_sames 8
+cpu_avg_samples 8
 net_avg_samples 2
 
 
@@ -44,45 +44,45 @@ TEXT
 # JSON for i3bar
 
 [
-{"full_text":"MEM","color":"\#888888","separator":false,"separator_block_width":6},\
-{"full_text":"${if_match ${memperc}<30}${mem}/${memmax}","color":"\#AAF096","separator":false,"separator_block_width":6},\
+{"full_text":"⮃  ","color":"\#cc241d","separator":false,"separator_block_width":6},\
+{"full_text":"${if_match ${memperc}<30}${mem}/${memmax}","color":"\#b8bb26","separator":false,"separator_block_width":6},\
 {"full_text":"${else}"},\
-{"full_text":"${if_match ${memperc}<60}${mem}/${memmax}","color":"\#F0DC64","separator":false,"separator_block_width":6},\
+{"full_text":"${if_match ${memperc}<60}${mem}/${memmax}","color":"\#Fabd2f","separator":false,"separator_block_width":6},\
 {"full_text":"${else}"},\
-{"full_text":"${if_match ${memperc}<85}${mem}/${memmax}","color":"\#FF9933","separator":false,"separator_block_width":6},\
+{"full_text":"${if_match ${memperc}<85}${mem}/${memmax}","color":"\#d65d0e","separator":false,"separator_block_width":6},\
 {"full_text":"${else}"},\
-{"full_text":"${if_match ${memperc}>=85}${mem}/${memmax}","color":"\#FF3333","separator":false,"separator_block_width":6},\
+{"full_text":"${if_match ${memperc}>=85}${mem}/${memmax}","color":"\#Fb4934","separator":false,"separator_block_width":6},\
 {"full_text":"${endif}${endif}${endif}${endif}"},\
 
-{"full_text":"CPU","color":"\#888888","separator":false,"separator_block_width":6},\
-{"full_text":"${if_match ${cpu cpu0}<25}${cpu cpu0}","color":"\#AAF096","separator":false,"separator_block_width":0},\
+{"full_text":"⮃ ","color":"\#C9DA2B","separator":false,"separator_block_width":6},\
+{"full_text":"${if_match ${cpu cpu0}<25}${cpu cpu0}","color":"\#b8bb26","separator":false,"separator_block_width":0},\
 {"full_text":"${else}"},\
-{"full_text":"${if_match ${cpu cpu0}<50}${cpu cpu0}","color":"\#F0DC64","separator":false,"separator_block_width":0},\
+{"full_text":"${if_match ${cpu cpu0}<50}${cpu cpu0}","color":"\#fabd2f","separator":false,"separator_block_width":0},\
 {"full_text":"${else}"},\
-{"full_text":"${if_match ${cpu cpu0}<75}${cpu cpu0}","color":"\#FF9933","separator":false,"separator_block_width":0},\
+{"full_text":"${if_match ${cpu cpu0}<75}${cpu cpu0}","color":"\#d65d0e","separator":false,"separator_block_width":0},\
 {"full_text":"${else}"},\
-{"full_text":"${if_match ${cpu cpu0}<=100}${cpu cpu0}","color":"\#FF3333","separator":false,"separator_block_width":0},\
+{"full_text":"${if_match ${cpu cpu0}<=100}${cpu cpu0}","color":"\#Fb4934","separator":false,"separator_block_width":0},\
 {"full_text":"${endif}${endif}${endif}${endif}"},\
 {"full_text":"%","color":"\#EEEEEE","separator":false,"separator_block_width":6},\
 
-{ "full_text": " ${exec sensors | grep 'temp2' | cut -c16-19 | sed '/^$/d'
-}°C" },\
-{"full_text" : "UP: ${upspeedf enp2s0}" , "color" : "\#FFF300"},\
-{"full_text" : "DN: ${downspeedf enp2s0}" , "color" : "\#00ff00"},\
 {
-    "full_text": " ${template0  --get-keyboard-layout} ",
-    "border": "\#cccccc",
-    "background": "\#000000",
+    "full_text": "⮃  ${exec sensors coretemp-isa-0000 | grep 'Physical' | awk '{print $4}'} ",
+    "color":"\#FF0000",
     "border_bottom": 2, "border_top": 0, "border_left": 0, "border_right": 2,
     "separator": false,
     "separator_block_width": 3
 },
+{ "full_text" : "⮃  ${exec setxkbmap -query | awk '{if (NR==3) print $2}'}"
+,"color" : "\#b16286" },
+{ "full_text": "⮃   SSD: ${fs_free /}" },\
+{ "full_text": "⮃ Data: ${fs_free /run/media/magnusb}" },\
+{ "full_text" : " ${if_up enp2s0} ${downspeed enp2s0}  ${upspeed enp2s0}${else}down${endif}" , "color" : ${if_up enp2s0} "\#00ff00"${else}"\#ff0000"${endif} },
+  
+# Date:
+{"full_text":"⮃ ","color":"\#0048ff","separator":false,"separator_block_width":6},\
+{"full_text":"${time %d/%m}","color":"\#f9f9f9","separator":false,"separator_block_width":6},\
 
-
-{ "full_text": "SSD_Free ${fs_free /}" },\
-{ "full_text": "Data_Free: ${fs_free /run/media/magnusb}" },\
-{"full_text" : "--" , "color" : "\#FFFFFF"},\
-
-{ "full_text" : "${time %d/%m/%Y %H:%M}"  , "color" : "\#00CDFF" },\
-
-{"full_text" : "--" , "color" : "\#FFFFFF"}],
+# Time:
+{"full_text":"⮃ ","color":"\#0048ff","separator":false,"separator_block_width":6},\
+{"full_text":"⮃ ${time %r}","color":"\#f9f9f9","separator":false}
+],
