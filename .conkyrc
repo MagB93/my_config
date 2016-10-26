@@ -45,7 +45,7 @@ TEXT
 
 [
 {"full_text":"⮃  ","color":"\#cc241d","separator":false,"separator_block_width":6},\
-{"full_text":"${if_match ${memperc}<30}${mem}/${memmax}","color":"\#b8bb26","separator":false,"separator_block_width":6},\
+{"full_text":"${if_match ${memperc}<30}${mem}/${memmax}","color":"\#689d26a","separator":false,"separator_block_width":6},\
 {"full_text":"${else}"},\
 {"full_text":"${if_match ${memperc}<60}${mem}/${memmax}","color":"\#Fabd2f","separator":false,"separator_block_width":6},\
 {"full_text":"${else}"},\
@@ -55,7 +55,7 @@ TEXT
 {"full_text":"${endif}${endif}${endif}${endif}"},\
 
 {"full_text":"⮃ ","color":"\#C9DA2B","separator":false,"separator_block_width":6},\
-{"full_text":"${if_match ${cpu cpu0}<25}${cpu cpu0}","color":"\#b8bb26","separator":false,"separator_block_width":0},\
+{"full_text":"${if_match ${cpu cpu0}<25}${cpu cpu0}","color":"\#689d6a","separator":false,"separator_block_width":0},\
 {"full_text":"${else}"},\
 {"full_text":"${if_match ${cpu cpu0}<50}${cpu cpu0}","color":"\#fabd2f","separator":false,"separator_block_width":0},\
 {"full_text":"${else}"},\
@@ -79,10 +79,10 @@ TEXT
 { "full_text" : " ${if_up enp2s0} ${downspeed enp2s0}  ${upspeed enp2s0}${else}down${endif}" , "color" : ${if_up enp2s0} "\#00ff00"${else}"\#ff0000"${endif} },
   
 # Date:
-{"full_text":"⮃ ","color":"\#0048ff","separator":false,"separator_block_width":6},\
+{"full_text":"⮃ ","color":"\#bdae93","separator":false,"separator_block_width":6},\
 {"full_text":"${time %d/%m}","color":"\#f9f9f9","separator":false,"separator_block_width":6},\
 
 # Time:
-{"full_text":"⮃ ","color":"\#0048ff","separator":false,"separator_block_width":6},\
+{"full_text":"⮃ ","color":"\#bdae93","separator":false,"separator_block_width":6},\
 {"full_text":"⮃ ${time %r}","color":"\#f9f9f9","separator":false}
 ],

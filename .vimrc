@@ -17,6 +17,7 @@ Plug 'tpope/vim-fugitive' " Git utilities
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'scrooloose/nerdcommenter' " Comment stuff out 
+Plug 'https://github.com/jalvesaq/Nvim-R.git'
 Plug 'mhinz/vim-startify'  " Nice startup screen
 Plug 'https://github.com/xolox/vim-session.git'
 Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
@@ -44,7 +45,7 @@ Plug 'KabbAmine/vim-polyglot'
 Plug 'honza/vim-snippets' " Snippets are separated from the engine. Add this if you want them:
 Plug 'SirVer/ultisnips' " Track the engine.
 Plug 'https://github.com/vim-scripts/gmsh.vim.git'
-
+Plug 'https://github.com/vim-scripts/LanguageTool.git'
 " Colorschemes
 Plug 'flazz/vim-colorschemes' " Basic colorschemes
 Plug 'KabbAmine/yowish.vim'
@@ -220,7 +221,13 @@ call plug#end()
     nmap <F12> :LLPStartPreview<cr>
 
     let g:tex_flavor = 'latex'
-    
+   
+    " language tool config
+    let g:languagetool_jar='$HOME/opt/java/LanguageTool-3.5/languagetool-commandline.jar'
+   
+    nnoremap <leader>l :LanguageToolCheck<CR>
+    nnoremap <leader>c :LanguageToolClear<CR>
+
     " For Ctrl + copy
     vnoremap <C-c> "*y
     nmap <F12> :LLPStartPreview<cr>
@@ -256,7 +263,6 @@ call plug#end()
     "set background=dark
     colorscheme gruvbox
     set background=dark
-    set g:gruvbox_contrast_dark=soft
 
     let g:indent_guides_auto_colors = 2
     set ts=2 sw=2 et

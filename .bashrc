@@ -40,18 +40,18 @@ export MEDIA=/run/media/magnusb
 
 export PATH=$PATH:$HOME/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/opt/feappv31/ver31/main/feappv:/usr/local/cuda-7.5/bin
 export PATH=$PATH:/opt/
-export FEAPPVHOME3_1=/media/magnus/Data/Dropbox/LUH/IKM_HIWI/feappv/ver31
-#alias feap='$FEAPPVHOME3_1/main/feappv'
+
 export PATH=$PATH:/opt/cisco/anyconnect/bin
 export DATA=$MEDIA
 export DROPBOX=$DATA/Dropbox
 export LUH=$DROPBOX/LUH
-export UNI=$LUH/15_16
+export UNI=$LUH/16_17
+export PSV=$UNI/PSV
+export MODSIM=$UNI/mod_sim
+export CM=$UNI/contact_mechanics
 export IKM=$LUH/IKM_HIWI
 export ELMO=$IKM/ElMoPy
 export BACH=$IKM/Latex/bachelorarbeit
-export PATH=$PATH:$HOME/neovim-qt/build/bin
-export NVINIT=$HOME/.config/nvim/init.vim
 
 # Openfoam sourcing
 source $HOME/OpenFOAM/OpenFOAM-v3.0+/etc/bashrc
