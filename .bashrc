@@ -35,53 +35,22 @@ colors() {
 
 [ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
 
-export MEDIA=/run/media/magnusb
-
-
-export PATH=$PATH:$HOME/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/opt/feappv31/ver31/main/feappv:/usr/local/cuda-7.5/bin
-export PATH=$PATH:/opt/
-
+# User specific aliases and functions
 export PATH=$PATH:/opt/cisco/anyconnect/bin
-export DATA=$MEDIA
-export DROPBOX=$DATA/Dropbox
+export MEDIA=/media
+export DATA=$MEDIA/Data
+export DROPBOX=$HOME/Dropbox
 export LUH=$DROPBOX/LUH
-export UNI=$LUH/16_17
+export UNI=$LUH/17
 export PSV=$UNI/PSV
 export MODSIM=$UNI/mod_sim
 export CM=$UNI/contact_mechanics
-export IKM=$LUH/IKM_HIWI
-export ELMO=$IKM/ElMoPy
-export BACH=$IKM/Latex/bachelorarbeit
-
-# Openfoam sourcing
-source $HOME/OpenFOAM/OpenFOAM-v3.0+/etc/bashrc
-export WM_NCOMPPROCS=8
-
-
 export OPT=/opt
-export NVIM=$HOME/.config/nvim
 
-# Intel stuff
-#export PATH=$PATH:/opt/intel:/opt/intel/vtune_amplifier_xe/bin64/
-export PATH=$PATH:/opt/intel/compilers_and_libraries/linux/bin/intel64
-export PATH=$PATH:/opt/intel/compilers_and_libraries/linux/mkl/bin
-#source /opt/intel/intelpython35/bin/pythonvars.sh
-#source activate py35
+export LBM=$HOME/.julia/v0.5/LatticeBoltzmann
 
-export PYTHONPATH="/media/magnus/Data/FEM/pyfem-1.0"
-export PATH=$PATH:$HOME/.local/bin
-export MYVIMRC=$HOME/.vimrc
-alias vpnuni=' rdesktop -u cip-bau/badel -K -g 95% ts.cip-bau.uni-hannover.de'
-
-export PYTHONPATH="${PYTHONPATH}:$HOME/.python/libs"
-export LD_LIBRARY_PATH=/usr/local/lib:$HOME/KitWare/VTK/VTK_git/build/bin:$HOME/KitWare/VTK/VTK_git/build/lib
-export PYTHONPATH=$PYTHONPATH:$HOME/KitWare/VTK/VTK_git/build/Wrapping/Python/vtk:$HOME/KitWare/VTK/VTK_git/build/lib:$HOME/KitWare/VTK/VTK_git/build/Wrapping/Python
+xrandr --output HDMI-A-0 --left-of DisplayPort-1 --rotate left
 
 export TERM=xterm-256color
-export PATH=$PATH:$HOME/opt/neovim-qt/build/bin
-export LLVM_CONFIG=/usr/bin/llvm-config
 
-setxkbmap -option grp:alt_shift_toggle us,de
-
-# Gruvbox true colors "
-source "$HOME/.vim/plugged/gruvbox/gruvbox_256palette.sh"
+screenfetch
