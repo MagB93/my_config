@@ -60,6 +60,8 @@ values."
                      spell-checking-enable-auto-dictionary t)
      syntax-checking
      version-control
+     (keyboard-layout :variables
+     kl-layout 'dvorak)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
