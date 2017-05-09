@@ -6,13 +6,13 @@ filetype off
 
 " ======= PLUGINS =====
 call plug#begin()
-Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround' " surround selections with things like quotes, parens, brakcets, etc.
-Plug 'tpope/vim-markdown'
+
 Plug 'pangloss/vim-javascript'
 
   " NERD tree will be loaded on the first invocation of NERDTreeToggle command
 Plug 'tpope/vim-fugitive' " Git utilities
+Plug 'airblade/vim-gitgutter' " show the differences 
 
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
@@ -23,6 +23,7 @@ Plug 'https://github.com/xolox/vim-session.git'
 Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
 Plug 'https://github.com/nathanaelkane/vim-indent-guides.git'
 Plug 'Shougo/deoplete.nvim'
+Plug 'Shougo/denite.nvim'
 Plug 'https://github.com/klen/python-mode.git'
 Plug 'https://github.com/xolox/vim-misc.git'
 Plug 'hynek/vim-python-pep8-indent'
@@ -46,6 +47,10 @@ Plug 'honza/vim-snippets' " Snippets are separated from the engine. Add this if 
 Plug 'SirVer/ultisnips' " Track the engine.
 Plug 'https://github.com/vim-scripts/gmsh.vim.git'
 Plug 'https://github.com/vim-scripts/LanguageTool.git'
+
+" Tags
+Plug 'szw/vim-tags'
+Plug 'https://github.com/majutsushi/tagbar.git'
 
 " Colorschemes
 Plug 'flazz/vim-colorschemes' " Basic colorschemes
@@ -159,7 +164,8 @@ call plug#end()
     set backupdir=~/.vim-tmp,~/.tmp,~/tmp,~/var/tmp,/tmp
     set directory=~/.vim-tmp,~/.tmp,~/.tmp,/var/tmp,/tmp
     set clipboard=unnamed
-" ===== Keyboard shortcuts
+
+    " ===== Keyboard shortcuts
     " Move up/down editor lines
     nnoremap j gj
     nnoremap k gk
@@ -196,6 +202,9 @@ call plug#end()
     inoremap <Left> <NOP>
 
 " ===== Plugin configuration
+"
+    " Use deoplete.
+    let g:deoplete#enable_at_startup = 1
     
     " Settings for python-mode "
     let g:pymode = 1
@@ -221,7 +230,6 @@ call plug#end()
     " Textmate holdou
     let g:livepreview_previewer = 'okular'
     nmap <F12> :LLPStartPreview<cr>
-
     let g:tex_flavor = 'latex'
    
     " language tool config
@@ -229,6 +237,9 @@ call plug#end()
    
     nnoremap <leader>l :LanguageToolCheck<CR>
     nnoremap <leader>c :LanguageToolClear<CR>
+
+    " Tagbar config
+    nmap <F8> :TagbarToggle<CR>
 
     " For Ctrl + copy
     vnoremap <C-c> "*y
@@ -257,7 +268,7 @@ call plug#end()
    
     set termguicolors
 
-    colorscheme firewatch
+    colorscheme gruvbox
     set background=dark
 
     let g:indent_guides_auto_colors = 2
