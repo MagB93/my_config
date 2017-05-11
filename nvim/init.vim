@@ -13,7 +13,8 @@ Plug 'pangloss/vim-javascript'
   " NERD tree will be loaded on the first invocation of NERDTreeToggle command
 Plug 'tpope/vim-fugitive' " Git utilities
 Plug 'airblade/vim-gitgutter' " show the differences 
-
+Plug 'https://github.com/jceb/vim-orgmode.git'
+Plug s
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'scrooloose/nerdcommenter' " Comment stuff out 
@@ -51,6 +52,7 @@ Plug 'https://github.com/vim-scripts/LanguageTool.git'
 " Tags
 Plug 'szw/vim-tags'
 Plug 'https://github.com/majutsushi/tagbar.git'
+Plug 'https://github.com/craigemery/vim-autotag.git'
 
 " Colorschemes
 Plug 'flazz/vim-colorschemes' " Basic colorschemes
