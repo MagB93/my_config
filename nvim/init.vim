@@ -1,5 +1,5 @@
-" Don't try to be vi compatible
-set nocompatible
+
+
 
 " helps force plugins to load correctly when it is turned back on below
 filetype off
@@ -14,7 +14,7 @@ Plug 'pangloss/vim-javascript'
 Plug 'tpope/vim-fugitive' " Git utilities
 Plug 'airblade/vim-gitgutter' " show the differences 
 Plug 'https://github.com/jceb/vim-orgmode.git'
-Plug s
+Plug 'jalcine/cmake.vim'
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'scrooloose/nerdcommenter' " Comment stuff out 
@@ -38,15 +38,14 @@ Plug 'lervag/vimtex'
 Plug 'glts/vim-texlog'
 Plug 'fs111/pydoc.vim'
 Plug 'townk/vim-autoclose'
-Plug 'sjl/gundo.vim'
 Plug 'wesQ3/vim-windowswap'
 Plug 'https://github.com/notpratheek/Pychimp-vim.git'
 Plug 'https://github.com/ryanoasis/vim-devicons.git'
 Plug 'KabbAmine/zeavim.vim'
+Plug 'https://github.com/mbbill/undotree.git'
 Plug 'KabbAmine/vim-polyglot'
 Plug 'honza/vim-snippets' " Snippets are separated from the engine. Add this if you want them:
 Plug 'SirVer/ultisnips' " Track the engine.
-Plug 'https://github.com/vim-scripts/gmsh.vim.git'
 Plug 'https://github.com/vim-scripts/LanguageTool.git'
 
 " Tags
@@ -124,7 +123,6 @@ call plug#end()
     set scrolloff=3
     set backspace=indent,eol,start
     set matchpairs+=<:> " use % to jump between pairs
-    runtime! macros/matchit.vim
 
     " enhanved command line completion
     set wildmenu
@@ -139,8 +137,7 @@ call plug#end()
 
     "Enable the tabline at the top
     set showtabline=2
-    set conceallevel=0
-    let g:tex_conceal = ""
+    set conceallevel=2
 
     " Highlight the curserline and column
     set cursorline
@@ -153,7 +150,6 @@ call plug#end()
     " Enable folding with the space bar
     nnoremap <space> za
 
-    "autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4
     " Searching
     set hlsearch
     set incsearch
@@ -163,15 +159,12 @@ call plug#end()
     map <leader><space> :let @/=''<cr> " clear search
 
     " Set the backup directory
-    set backupdir=~/.vim-tmp,~/.tmp,~/tmp,~/var/tmp,/tmp
-    set directory=~/.vim-tmp,~/.tmp,~/.tmp,/var/tmp,/tmp
     set clipboard=unnamed
 
     " ===== Keyboard shortcuts
     " Move up/down editor lines
     nnoremap j gj
     nnoremap k gk
-    nnoremap <C-z>:%s/,\ */,\ /g<CR>:%s/#\ */#\ /g<CR>:noh<CR>
 
     " for moving to a different split view
     noremap <C-J> <C-W><C-J>
@@ -185,12 +178,6 @@ call plug#end()
     inoremap <C-s> <Esc>:wa<CR>
     noremap  <C-q> :mksession!<CR>:qa<CR>
     inoremap <C-q> <Esc>:mksession!<CR>:qa<CR>
-
-    
-    " Remap help key.
-    inoremap <F1> <ESC>:set invfullscreen<CR>a
-    nnoremap <F1> :set invfullscreen<CR>
-    vnoremap <F1> :set invfullscreen<CR>
     
     "Disable arrow keys
     noremap <Up> <NOP>
@@ -223,25 +210,14 @@ call plug#end()
     " toogle NERDtree via ctrl n
     map <C-n> :NERDTreeToggle<CR>
     
-    " toggle gundo
-    nnoremap <F4>:GundoToggle<CR>
-
-    " LateX vonfig
-    let g:tex_fold_enabled=1
-
-    " Textmate holdou
-    let g:livepreview_previewer = 'okular'
-    nmap <F12> :LLPStartPreview<cr>
-    let g:tex_flavor = 'latex'
-   
-    " language tool config
-    let g:languagetool_jar='$HOME/opt/java/LanguageTool-3.5/languagetool-commandline.jar'
-   
     nnoremap <leader>l :LanguageToolCheck<CR>
     nnoremap <leader>c :LanguageToolClear<CR>
 
     " Tagbar config
     nmap <F8> :TagbarToggle<CR>
+
+    " Undo tree
+    nnoremap <F4> :UndotreeToggle<CR>
 
     " For Ctrl + copy
     vnoremap <C-c> "*y
@@ -264,6 +240,16 @@ call plug#end()
     nnoremap <space>gps :Dispatch! git push<CR>
     nnoremap <space>gpl :Dispatch! git pull<CR>
 
+    " Fortran openmp highlighting
+    let fortran_fixed_source=0
+    let fortran_more_precise=1 "better syntax"
+    let fortran_fold=1
+    let fortran_fold_multilinecomments=1
+    let fortran_fold_conditionals=1
+
+    syn region fortranDirective start=/!$omp.\{-}/ end=/[^\&]$/
+    syn match fortranDirective "\v!\$\s"
+          
 " ===== Colorscheme configuration
     " Visualize tabs and newlines
     set listchars=tab:▸\ ,eol:¬
