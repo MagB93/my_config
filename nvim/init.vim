@@ -23,7 +23,7 @@ Plug 'mhinz/vim-startify'  " Nice startup screen
 Plug 'https://github.com/xolox/vim-session.git'
 Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
 Plug 'https://github.com/nathanaelkane/vim-indent-guides.git'
-Plug 'Shougo/deoplete.nvim'
+Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
 Plug 'Shougo/denite.nvim'
 Plug 'https://github.com/klen/python-mode.git'
 Plug 'https://github.com/xolox/vim-misc.git'
@@ -194,6 +194,7 @@ call plug#end()
 "
     " Use deoplete.
     let g:deoplete#enable_at_startup = 1
+    let g:deoplete#enable_smart_case = 1
     
     " Settings for python-mode "
     let g:pymode = 1
