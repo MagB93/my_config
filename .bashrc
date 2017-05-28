@@ -42,15 +42,19 @@ export DATA=$MEDIA/Data
 export DROPBOX=$HOME/Dropbox
 export LUH=$DROPBOX/LUH
 export UNI=$LUH/17
-export PSV=$UNI/PSV
-export MODSIM=$UNI/mod_sim
-export CM=$UNI/contact_mechanics
-export OPT=/opt
+export OPT=$HOME/opt
 
 export LBM=$HOME/.julia/v0.5/LatticeBoltzmann
-
-xrandr --output HDMI-A-0 --left-of DisplayPort-1 --rotate left
+export LBM6=$HOME/.julia/v0.6/LatticeBoltzmann
 
 export TERM=xterm-256color
+export  MTP_NO_PROBE="1"
+
+# Aliases
+alias la='ls -la'
+alias julia6=$OPT/julia/julia
+
+# GNU global configuration
+echo export GTAGSLABEL=pygments >> .profile
 
 screenfetch
