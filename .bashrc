@@ -36,25 +36,20 @@ colors() {
 [ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
 
 # User specific aliases and functions
-export PATH=$PATH:/opt/cisco/anyconnect/bin
 export MEDIA=/media
 export DATA=$MEDIA/Data
 export DROPBOX=$HOME/Dropbox
 export LUH=$DROPBOX/LUH
 export UNI=$LUH/17
 export OPT=$HOME/opt
+export FLBM=$OPT/ForOpenLBM
 
 export LBM=$HOME/.julia/v0.5/LatticeBoltzmann
-export LBM6=$HOME/.julia/v0.6/LatticeBoltzmann
-
-export TERM=xterm-256color
-export  MTP_NO_PROBE="1"
-
-# Aliases
-alias la='ls -la'
 alias julia6=$OPT/julia/julia
 
-# GNU global configuration
-echo export GTAGSLABEL=pygments >> .profile
-
-screenfetch
+export TERM=xterm-256color
+export PFUNIT=/usr/local
+alias matlab=$OPT/Matlab/R2017a/bin/matlab
+alias la='ls -la'
+export TERM=xterm-256color
+# screenfetch
