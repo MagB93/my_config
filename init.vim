@@ -7,31 +7,40 @@ filetype off
 " ======= PLUGINS =====
 call plug#begin()
 Plug 'tpope/vim-surround' " surround selections with things like quotes, parens, brakcets, etc.
+Plug 'tpope/vim-commentary'
 
 Plug 'pangloss/vim-javascript'
 
   " NERD tree will be loaded on the first invocation of NERDTreeToggle command
 Plug 'tpope/vim-fugitive' " Git utilities
-Plug 'airblade/vim-gitgutter' " show the differences 
+Plug 'tpope/vim-unimpaired'
+Plug 'airblade/vim-gitgutter' " show the differences
 Plug 'https://github.com/jceb/vim-orgmode.git'
 Plug 'jalcine/cmake.vim'
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'scrooloose/nerdcommenter' " Comment stuff out 
 Plug 'https://github.com/jalvesaq/Nvim-R.git'
 Plug 'mhinz/vim-startify'  " Nice startup screen
 Plug 'https://github.com/xolox/vim-session.git'
-Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
+Plug 'daeyun/vim-matlab'
 Plug 'https://github.com/nathanaelkane/vim-indent-guides.git'
+Plug 'chrisbra/csv.vim'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'w0rp/ale'
+
+" Deoplete engines
 Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
+"Plug 'JuliaEditorSupport/deoplete-julia'
+Plug 'zchee/deoplete-clang'
+Plug 'poppyschmo/deoplete-latex'
+
 Plug 'Shougo/denite.nvim'
 Plug 'https://github.com/klen/python-mode.git'
 Plug 'https://github.com/xolox/vim-misc.git'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'tmhedberg/SimpylFold'
-Plug 'https://github.com/itchyny/lightline.vim.git'
-Plug 'https://github.com/kien/rainbow_parentheses.vim.git' " Nice parenthesis
-Plug 'JuliaEditorSupport/deoplete-julia'
+"Plug 'https://github.com/kien/rainbow_parentheses.vim.git' " Nice parenthesis
+Plug 'luochen1990/rainbow'
 Plug 'JuliaLang/julia-vim'
 Plug 'https://github.com/blueyed/vim-diminactive.git'
 Plug 'lervag/vimtex'
@@ -41,19 +50,25 @@ Plug 'townk/vim-autoclose'
 Plug 'wesQ3/vim-windowswap'
 Plug 'https://github.com/notpratheek/Pychimp-vim.git'
 Plug 'https://github.com/ryanoasis/vim-devicons.git'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'KabbAmine/zeavim.vim'
 Plug 'https://github.com/mbbill/undotree.git'
 Plug 'KabbAmine/vim-polyglot'
 Plug 'honza/vim-snippets' " Snippets are separated from the engine. Add this if you want them:
 Plug 'SirVer/ultisnips' " Track the engine.
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
 Plug 'https://github.com/vim-scripts/LanguageTool.git'
 Plug 'kassio/neoterm' " better terminal
-Plug 'neomake/neomake'
+" Plug 'neomake/neomake'
 Plug 'aklt/plantuml-syntax'
 Plug 'jvirtanen/vim-octave'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'potatoesmaster/i3-vim-syntax'
+Plug 'junegunn/vim-easy-align'
+
 " Tags
 Plug 'szw/vim-tags'
 Plug 'https://github.com/majutsushi/tagbar.git'
@@ -198,7 +213,10 @@ call plug#end()
     inoremap <Left> <NOP>
 
 " ===== Plugin configuration
-"
+
+    " Start the rainbow_parentheses improved stuff
+    let g:rainbow_active = 1
+
     " Use deoplete.
     let g:deoplete#enable_at_startup = 1
     let g:deoplete#enable_smart_case = 1
@@ -258,6 +276,10 @@ call plug#end()
     syn region fortranDirective start=/!$omp.\{-}/ end=/[^\&]$/
     syn match fortranDirective "\v!\$\s"
 
+    " Julia config
+    let g:default_julia_version = "0.6"
+
+
     " NEOTERM ------    
     " mapping for leaving terminal input mode
     tnoremap <Esc> <C-\><C-n> 
@@ -283,66 +305,116 @@ call plug#end()
     command! -nargs=+ Tg :T git <args>
 
     " Neomake after each saving
-    autocmd! BufWritePost * Neomake
+    " autocmd! BufWritePost * Neomake
+    let g:ale_set_quickfix = 1
+    let g:ale_open_list = 1
+
+    "==== FZF config 
+    " This is the default extra key bindings
+    let g:fzf_action = {
+      \ 'ctrl-t': 'tab split',
+      \ 'ctrl-x': 'split',
+      \ 'ctrl-v': 'vsplit' }
+
+    " Default fzf layout
+    " - down / up / left / right
+    let g:fzf_layout = { 'down': '~40%' }
+    nnoremap <c-p> :FZF
+
+    " In Neovim, you can set up fzf window using a Vim command
+    let g:fzf_layout = { 'window': 'enew' }
+    let g:fzf_layout = { 'window': '-tabnew' }
+
+    " Customize fzf colors to match your color scheme
+    let g:fzf_colors =
+    \ { 'fg':      ['fg', 'Normal'],
+      \ 'bg':      ['bg', 'Normal'],
+      \ 'hl':      ['fg', 'Comment'],
+      \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+      \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+      \ 'hl+':     ['fg', 'Statement'],
+      \ 'info':    ['fg', 'PreProc'],
+      \ 'prompt':  ['fg', 'Conditional'],
+      \ 'pointer': ['fg', 'Exception'],
+      \ 'marker':  ['fg', 'Keyword'],
+      \ 'spinner': ['fg', 'Label'],
+      \ 'header':  ['fg', 'Comment'] }
+
+    " Enable per-command history.
+    " CTRL-N and CTRL-P will be automatically bound to next-history and
+    " previous-history instead of down and up. If you don't like the change,
+    " explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
+    let g:fzf_history_dir = '~/.local/share/fzf-history'
+
+
+    " [Buffers] Jump to the existing window if possible
+    let g:fzf_buffers_jump = 1
+
+    " [[B]Commits] Customize the options used by 'git log':
+    let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+
+    " [Tags] Command to generate tags file
+    let g:fzf_tags_command = 'ctags -R'
+
+    " [Commands] --expect expression for directly executing the command
+    let g:fzf_commands_expect = 'alt-enter,ctrl-x'
+
+    " Mapping selecting mappings
+    nmap <leader><tab> <plug>(fzf-maps-n)
+    xmap <leader><tab> <plug>(fzf-maps-x)
+    omap <leader><tab> <plug>(fzf-maps-o)
+
+    " Insert mode completion
+    imap <c-x><c-k> <plug>(fzf-complete-word)
+    imap <c-x><c-f> <plug>(fzf-complete-path)
+    imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+    imap <c-x><c-l> <plug>(fzf-complete-line)
+
+    " Advanced customization using autoload functions
+    inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
+
+    function! s:fzf_statusline()
+      " Override statusline as you like
+      highlight fzf1 ctermfg=161 ctermbg=251
+      highlight fzf2 ctermfg=23 ctermbg=251
+      highlight fzf3 ctermfg=237 ctermbg=251
+      setlocal statusline=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
+    endfunction
+
+    autocmd! User FzfStatusLine call <SID>fzf_statusline()
 
 " ===== Colorscheme configuration
     " Visualize tabs and newlines
     set listchars=tab:▸\ ,eol:¬
-   
+
     set termguicolors
 
-    colorscheme PaperColor
+    colorscheme PaperColor "seoul256
     set background=dark
+    " let g:seoul256_background = 236
+
     map <Leader>bg :let &background = ( &background == "dark"? "light" : "dark" )<CR>
     let g:indent_guides_auto_colors = 2
-    set ts=2 sw=2 et
-    let g:indent_guides_start_level = 4
-    let g:indent_guides_guide_size = 1
+    set ts=4 sw=4 et
+    let g:indent_guides_start_level = 2
+    let g:indent_guides_guide_size = 2
+    let g:indent_guides_enable_on_vim_startup = 1
 
-    let g:lightline = {
-          \ 'colorscheme': 'PaperColor',
-          \ 'active': {
-          \   'left': [ [ 'mode', 'paste' ],
-          \             [ 'fugitive', 'filename' ] ]
-          \ },
-          \ 'component_function': {
-          \   'fugitive': 'LightlineFugitive',
-          \   'readonly': 'LightlineReadonly',
-          \   'modified': 'LightlineModified',
-          \   'filename': 'LightlineFilename'
-          \ },
-          \ 'separator': { 'left': '|', 'right': '|' },
-          \ 'subseparator': { 'left': '|', 'right': '|' }
-          \ }
+    " Airline config
+    let g:airline_powerline_fonts = 1
+    let g:airline_theme = 'papercolor'
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tagbar#enabled = 1
+    let g:airline#extensions#csv = 1
+    let g:airline#extensions#ale#enabled = 1
 
-    function! LightlineModified()
-      if &filetype == "help"
-        return ""
-      elseif &modified
-        return "+"
-      elseif &modifiable
-        return ""
-      else
-        return ""
-      endif
+    " Adds the window number to the front
+    function! WindowNumber(...)
+        let builder = a:1
+        let context = a:2
+        call builder.add_section('airline_b', ' %{tabpagewinnr(tabpagenr())} ')
+        return 0
     endfunction
 
-    function! LightlineReadonly()
-      if &filetype == "help"
-        return ""
-      elseif &readonly
-        return "r-"
-      else
-        return ""
-      endif
-    endfunction
-
-    function! LightlineFugitive()
-      return exists('*fugitive#head') ? fugitive#head() : ''
-    endfunction
-
-    function! LightlineFilename()
-      return ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
-           \ ('' != expand('%:t') ? expand('%:t') : '[No Name]') .
-           \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
-    endfunction
+    call airline#add_statusline_func('WindowNumber')
+    call airline#add_inactive_statusline_func('WindowNumber')
