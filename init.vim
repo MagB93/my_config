@@ -1,6 +1,4 @@
 
-
-
 " helps force plugins to load correctly when it is turned back on below
 filetype off
 
@@ -27,11 +25,12 @@ Plug 'https://github.com/nathanaelkane/vim-indent-guides.git'
 Plug 'chrisbra/csv.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'w0rp/ale'
+Plug 'rudrab/vimf90'
 
 " Deoplete engines
 Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
-"Plug 'JuliaEditorSupport/deoplete-julia'
-Plug 'zchee/deoplete-clang'
+Plug 'JuliaEditorSupport/deoplete-julia'
+Plug 'tweekmonster/deoplete-clang2'
 Plug 'poppyschmo/deoplete-latex'
 
 Plug 'Shougo/denite.nvim'
@@ -39,7 +38,7 @@ Plug 'https://github.com/klen/python-mode.git'
 Plug 'https://github.com/xolox/vim-misc.git'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'tmhedberg/SimpylFold'
-"Plug 'https://github.com/kien/rainbow_parentheses.vim.git' " Nice parenthesis
+Plug 'https://github.com/kien/rainbow_parentheses.vim.git' " Nice parenthesis
 Plug 'luochen1990/rainbow'
 Plug 'JuliaLang/julia-vim'
 Plug 'https://github.com/blueyed/vim-diminactive.git'
@@ -61,7 +60,6 @@ Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'https://github.com/vim-scripts/LanguageTool.git'
 Plug 'kassio/neoterm' " better terminal
-" Plug 'neomake/neomake'
 Plug 'aklt/plantuml-syntax'
 Plug 'jvirtanen/vim-octave'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -78,17 +76,13 @@ Plug 'https://github.com/craigemery/vim-autotag.git'
 Plug 'flazz/vim-colorschemes' " Basic colorschemes
 Plug 'KabbAmine/yowish.vim'
 Plug 'vim-scripts/relaxed-green'
-Plug 'kristijanhusak/vim-hybrid-material'
 Plug 'tomasr/molokai'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'fmoralesc/molokayo'  " Better molokai, requires molokai though
 Plug 'https://github.com/freeo/vim-kalisi'
 Plug 'https://github.com/morhetz/gruvbox.git'
 Plug 'https://github.com/hhsnopek/vim-firewatch.git'
-Plug 'mhartington/oceanic-next'
-Plug 'https://github.com/limadm/vim-blues.git'
 Plug 'morhetz/gruvbox'
-Plug 'https://github.com/jacoborus/tender.vim.git'
 
 call plug#end()
 
@@ -200,7 +194,7 @@ call plug#end()
     inoremap <C-s> <Esc>:wa<CR>
     noremap  <C-q> :mksession!<CR>:qa<CR>
     inoremap <C-q> <Esc>:mksession!<CR>:qa<CR>
-    
+
     "Disable arrow keys
     noremap <Up> <NOP>
     noremap <Down> <NOP>
@@ -220,7 +214,7 @@ call plug#end()
     " Use deoplete.
     let g:deoplete#enable_at_startup = 1
     let g:deoplete#enable_smart_case = 1
-    
+
     " Settings for python-mode "
     let g:pymode = 1
     let g:pymode_lint = 1
@@ -235,7 +229,7 @@ call plug#end()
 
     " toogle NERDtree via ctrl n
     map <C-n> :NERDTreeToggle<CR>
-    
+
     nnoremap <leader>l :LanguageToolCheck<CR>
     nnoremap <leader>c :LanguageToolClear<CR>
 
@@ -247,7 +241,6 @@ call plug#end()
 
     " For Ctrl + copy
     vnoremap <C-c> "*y
-    nmap <F12> :LLPStartPreview<cr>
 
     " Fugitive configureation
     nnoremap <space>ga :Git add %:p<CR><CR>
@@ -267,18 +260,28 @@ call plug#end()
     nnoremap <space>gpl :Dispatch! git pull<CR>
 
     " Fortran openmp highlighting
-    let fortran_fixed_source=0
     let fortran_more_precise=1 "better syntax"
     let fortran_fold=1
     let fortran_fold_multilinecomments=1
     let fortran_fold_conditionals=1
+
+    let s:extfname = expand("%:e")
+    if s:extfname ==? "f90"
+       let fortran_free_source=1
+       unlet! fortran_fixed_source
+    else
+       let fortran_fixed_source=1
+       unlet! fortran_free_source
+    endif
 
     syn region fortranDirective start=/!$omp.\{-}/ end=/[^\&]$/
     syn match fortranDirective "\v!\$\s"
 
     " Julia config
     let g:default_julia_version = "0.6"
-
+    
+    " Modify the default lisp type to the julia type for neoterm 
+    au VimEnter,BufRead,BufNewFile *.jl set filetype=julia
 
     " NEOTERM ------    
     " mapping for leaving terminal input mode
@@ -298,16 +301,22 @@ call plug#end()
     " kills the current job (send a <c-c>)
     nnoremap <silent> ,tc :call neoterm#kill()<cr>
 
-    " Modify the default lisp type to the julia type for neoterm
-    au VimEnter,BufRead,BufNewFile *.jl set filetype=julia
-    
+
     " Git commands
     command! -nargs=+ Tg :T git <args>
 
     " Neomake after each saving
     " autocmd! BufWritePost * Neomake
     let g:ale_set_quickfix = 1
+    let g:ale_keep_list_window_open = 1
     let g:ale_open_list = 1
+    let g:ale_sign_column_always = 1 " keep the gutter open
+    let g:ale_sign_error = '>>'
+    let g:ale_sign_warning = '--'
+    let g:ale_echo_msg_error_str = 'E'
+    let g:ale_echo_msg_warning_str = 'W'
+    let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+
 
     "==== FZF config 
     " This is the default extra key bindings
