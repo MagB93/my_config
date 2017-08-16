@@ -54,8 +54,11 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'KabbAmine/zeavim.vim'
 Plug 'https://github.com/mbbill/undotree.git'
 Plug 'KabbAmine/vim-polyglot'
+Plug 'vim-scripts/fortran.vim'
+Plug 'jiangxincode/mpi.vim'
 Plug 'honza/vim-snippets' " Snippets are separated from the engine. Add this if you want them:
 Plug 'SirVer/ultisnips' " Track the engine.
+Plugin 'synzox/ultisnips-fortran'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'https://github.com/vim-scripts/LanguageTool.git'
