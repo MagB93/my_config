@@ -10,22 +10,27 @@ Plug 'tpope/vim-commentary'
 Plug 'pangloss/vim-javascript'
 
   " NERD tree will be loaded on the first invocation of NERDTreeToggle command
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'tpope/vim-fugitive' " Git utilities
 Plug 'tpope/vim-unimpaired'
 Plug 'airblade/vim-gitgutter' " show the differences
 Plug 'https://github.com/jceb/vim-orgmode.git'
 Plug 'jalcine/cmake.vim'
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'https://github.com/jalvesaq/Nvim-R.git'
 Plug 'mhinz/vim-startify'  " Nice startup screen
 Plug 'https://github.com/xolox/vim-session.git'
 Plug 'daeyun/vim-matlab'
 Plug 'https://github.com/nathanaelkane/vim-indent-guides.git'
+Plug 'equalsraf/neovim-gui-shim'
+Plug 'dzhou121/gonvim-fuzzy'
 Plug 'chrisbra/csv.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'w0rp/ale'
 Plug 'rudrab/vimf90'
+Plug 'rhysd/vim-grammarous'
+Plug 'Shougo/echodoc'
 
 " Deoplete engines
 Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
@@ -58,7 +63,7 @@ Plug 'vim-scripts/fortran.vim'
 Plug 'jiangxincode/mpi.vim'
 Plug 'honza/vim-snippets' " Snippets are separated from the engine. Add this if you want them:
 Plug 'SirVer/ultisnips' " Track the engine.
-Plugin 'synzox/ultisnips-fortran'
+Plug 'synzox/ultisnips-fortran'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'https://github.com/vim-scripts/LanguageTool.git'
@@ -69,6 +74,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'potatoesmaster/i3-vim-syntax'
 Plug 'junegunn/vim-easy-align'
+Plug 'fatih/vim-go'
 
 " Tags
 Plug 'szw/vim-tags'
