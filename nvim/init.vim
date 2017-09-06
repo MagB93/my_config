@@ -18,13 +18,10 @@ Plug 'airblade/vim-gitgutter' " show the differences
 Plug 'https://github.com/jceb/vim-orgmode.git'
 Plug 'jalcine/cmake.vim'
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
-Plug 'https://github.com/jalvesaq/Nvim-R.git'
 Plug 'mhinz/vim-startify'  " Nice startup screen
-Plug 'https://github.com/xolox/vim-session.git'
-Plug 'daeyun/vim-matlab'
+Plug 'tpope/vim-obsession'
 Plug 'https://github.com/nathanaelkane/vim-indent-guides.git'
 Plug 'equalsraf/neovim-gui-shim'
-Plug 'dzhou121/gonvim-fuzzy'
 Plug 'chrisbra/csv.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'w0rp/ale'
@@ -32,28 +29,25 @@ Plug 'rudrab/vimf90'
 Plug 'rhysd/vim-grammarous'
 Plug 'Shougo/echodoc'
 Plug 'myusuf3/numbers.vim'
-Plug 'wellle/targets'
+Plug 'wellle/targets.vim'
 
 " Deoplete engines
 Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
 Plug 'tweekmonster/deoplete-clang2'
 Plug 'poppyschmo/deoplete-latex'
+Plug 'zchee/deoplete-jedi'
 
 Plug 'Shougo/denite.nvim'
-Plug 'https://github.com/klen/python-mode.git'
-Plug 'https://github.com/xolox/vim-misc.git'
-Plug 'hynek/vim-python-pep8-indent'
-Plug 'tmhedberg/SimpylFold'
-Plug 'https://github.com/kien/rainbow_parentheses.vim.git' " Nice parenthesis
 Plug 'luochen1990/rainbow'
 Plug 'JuliaLang/julia-vim'
+Plug 'autozimu/LanguageClient-neovim'
+Plug 'roxma/nvim-completion-manager'
+
 Plug 'https://github.com/blueyed/vim-diminactive.git'
 Plug 'lervag/vimtex'
 Plug 'glts/vim-texlog'
-Plug 'fs111/pydoc.vim'
-Plug 'townk/vim-autoclose'
+Plug 'jiangmiao/auto-pairs'
 Plug 'wesQ3/vim-windowswap'
-Plug 'https://github.com/notpratheek/Pychimp-vim.git'
 Plug 'https://github.com/ryanoasis/vim-devicons.git'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -70,12 +64,10 @@ Plug 'Shougo/neosnippet-snippets'
 Plug 'https://github.com/vim-scripts/LanguageTool.git'
 Plug 'kassio/neoterm' " better terminal
 Plug 'aklt/plantuml-syntax'
-Plug 'jvirtanen/vim-octave'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'potatoesmaster/i3-vim-syntax'
 Plug 'junegunn/vim-easy-align'
-Plug 'fatih/vim-go'
 
 " Tags
 Plug 'szw/vim-tags'
@@ -84,13 +76,9 @@ Plug 'https://github.com/craigemery/vim-autotag.git'
 
 " Colorschemes
 Plug 'flazz/vim-colorschemes' " Basic colorschemes
-Plug 'KabbAmine/yowish.vim'
-Plug 'vim-scripts/relaxed-green'
 Plug 'tomasr/molokai'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'fmoralesc/molokayo'  " Better molokai, requires molokai though
-Plug 'https://github.com/freeo/vim-kalisi'
-Plug 'https://github.com/morhetz/gruvbox.git'
 Plug 'https://github.com/hhsnopek/vim-firewatch.git'
 Plug 'morhetz/gruvbox'
 
@@ -284,14 +272,30 @@ call plug#end()
        unlet! fortran_free_source
     endif
 
+    " OMP directives
     syn region fortranDirective start=/!$omp.\{-}/ end=/[^\&]$/
     syn match fortranDirective "\v!\$\s"
 
     " Julia config
     let g:default_julia_version = "0.6"
-    
-    " Modify the default lisp type to the julia type for neoterm 
+
+    " Modify the default lisp type to the julia type for neoterm
     au VimEnter,BufRead,BufNewFile *.jl set filetype=julia
+
+    " language server
+    let g:LanguageClient_autoStart = 1
+    let g:LanguageClient_serverCommands = {
+    \   'julia': ['julia', '--startup-file=no', '--history-file=no', '-e', '
+    \       using LanguageServer;
+    \       server = LanguageServer.LanguageServerInstance(STDIN, STDOUT, false);
+    \       server.runlinter = true;
+    \       run(server);
+    \   '],
+    \ }
+
+    nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+    nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+    nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 
     " NEOTERM ------    
     " mapping for leaving terminal input mode
@@ -338,7 +342,7 @@ call plug#end()
     " Default fzf layout
     " - down / up / left / right
     let g:fzf_layout = { 'down': '~40%' }
-    nnoremap <c-p> :FZF
+    nnoremap <c-enter> :FZF
 
     " In Neovim, you can set up fzf window using a Vim command
     let g:fzf_layout = { 'window': 'enew' }

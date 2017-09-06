@@ -1,14 +1,10 @@
-const activate = (Oni) => {
-   console.log("config activated")
-}
+const activate = (oni) => {
+   oni.input.unbind("<c-p>")
+};
 
-const deactivate = () => {
-   console.log("config deactivated")
-}
 
 module.exports = {
    activate,
-   deactivate,
   //add custom config here, such as
   "oni.useDefaultConfig": false,
   "statusbar.enabled": false,
@@ -16,5 +12,5 @@ module.exports = {
   "tabs.enabled": false,
   "tabs.showVimTabs": true,
   "editor.fontSize": "13px",
-  "editor.fontFamily": "Source Code Pro"
+  "editor.fontFamily": "Source Code Pro",
 }
