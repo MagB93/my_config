@@ -30,12 +30,14 @@ Plug 'rhysd/vim-grammarous'
 Plug 'Shougo/echodoc'
 Plug 'myusuf3/numbers.vim'
 Plug 'wellle/targets.vim'
+Plug 'vimwiki/vimwiki'
 
 " Deoplete engines
 Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
 Plug 'tweekmonster/deoplete-clang2'
 Plug 'poppyschmo/deoplete-latex'
 Plug 'zchee/deoplete-jedi'
+Plug 'tenfyzhong/CompleteParameter.vim'
 
 Plug 'Shougo/denite.nvim'
 Plug 'luochen1990/rainbow'
@@ -81,6 +83,7 @@ Plug 'NLKNguyen/papercolor-theme'
 Plug 'fmoralesc/molokayo'  " Better molokai, requires molokai though
 Plug 'https://github.com/hhsnopek/vim-firewatch.git'
 Plug 'morhetz/gruvbox'
+Plug 'https://github.com/rakr/vim-two-firewatch.git'
 
 call plug#end()
 
@@ -212,6 +215,11 @@ call plug#end()
     " Use deoplete.
     let g:deoplete#enable_at_startup = 1
     let g:deoplete#enable_smart_case = 1
+    inoremap <silent><expr> ( complete_parameter#pre_complete("()")
+    smap <c-j> <Plug>(complete_parameter#goto_next_parameter)
+    imap <c-j> <Plug>(complete_parameter#goto_next_parameter)
+    smap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
+    imap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
 
     " Settings for python-mode "
     let g:pymode = 1
@@ -220,14 +228,23 @@ call plug#end()
     let g:pymode_motion = 1
     let g:pymode_python = 'python3'
 
-    " Snippets config
-    let g:UltiSnipsExpandTrigger="<tab>"
-    let g:UltiSnipsJumpForwardTrigger="<c-b>"
-    let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
     " toogle NERDtree via ctrl n
     map <C-n> :NERDTreeToggle<CR>
+    " Plugin key-mappings.
+    " Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+    imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+    smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+    xmap <C-k>     <Plug>(neosnippet_expand_target)
 
+    " SuperTab like snippets' behavior.
+    imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+     \ "\<Plug>(neosnippet_expand_or_jump)"
+     \: pumvisible() ? "\<C-n>" : "\<TAB>"
+    smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+     \ "\<Plug>(neosnippet_expand_or_jump)"
+     \: "\<TAB>"
+
+    let g:languagetool_jar="$OPT/LanguageTool-3.8/languagetool-commandline.jar"
     nnoremap <leader>l :LanguageToolCheck<CR>
     nnoremap <leader>c :LanguageToolClear<CR>
 
@@ -282,6 +299,7 @@ call plug#end()
     " Modify the default lisp type to the julia type for neoterm
     au VimEnter,BufRead,BufNewFile *.jl set filetype=julia
 
+
     " language server
     let g:LanguageClient_autoStart = 1
     let g:LanguageClient_serverCommands = {
@@ -297,9 +315,9 @@ call plug#end()
     nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
     nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 
-    " NEOTERM ------    
+    " NEOTERM ------
     " mapping for leaving terminal input mode
-    tnoremap <Esc> <C-\><C-n> 
+    tnoremap <Esc> <C-\><C-n>
     let g:neoterm_position = 'vertical'
     let g:neoterm_automap_keys = ',tt'
 
@@ -332,7 +350,7 @@ call plug#end()
     let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
 
-    "==== FZF config 
+    "==== FZF config
     " This is the default extra key bindings
     let g:fzf_action = {
       \ 'ctrl-t': 'tab split',
@@ -340,9 +358,9 @@ call plug#end()
       \ 'ctrl-v': 'vsplit' }
 
     " Default fzf layout
-    " - down / up / left / right
+    "u - down / up / left / right
     let g:fzf_layout = { 'down': '~40%' }
-    nnoremap <c-enter> :FZF
+    nnoremap <c-p> :FZF <CR>
 
     " In Neovim, you can set up fzf window using a Vim command
     let g:fzf_layout = { 'window': 'enew' }
@@ -377,7 +395,7 @@ call plug#end()
     let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
 
     " [Tags] Command to generate tags file
-    let g:fzf_tags_command = 'ctags -R'
+    let g:fzf_tags_command = 'ctags-exuberant -R'
 
     " [Commands] --expect expression for directly executing the command
     let g:fzf_commands_expect = 'alt-enter,ctrl-x'
