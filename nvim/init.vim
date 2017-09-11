@@ -31,6 +31,7 @@ Plug 'Shougo/echodoc'
 Plug 'myusuf3/numbers.vim'
 Plug 'wellle/targets.vim'
 Plug 'vimwiki/vimwiki'
+Plug 'yuttie/comfortable-motion.vim'
 
 " Deoplete engines
 Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
@@ -177,8 +178,6 @@ call plug#end()
 
     " Set the backup directory
     set clipboard=unnamed
-
-    " ===== Keyboard shortcuts
     " Move up/down editor lines
     nnoremap j gj
     nnoremap k gk
@@ -443,7 +442,7 @@ call plug#end()
 
     " Airline config
     let g:airline_powerline_fonts = 1
-    let g:airline_theme = 'papercolor'
+    let g:airline_theme = 'badwolf'
     let g:airline#extensions#tabline#enabled = 1
     let g:airline#extensions#tagbar#enabled = 1
     let g:airline#extensions#csv = 1
