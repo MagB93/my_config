@@ -9,7 +9,7 @@
 
 (defun spacelite/init-makeup ()
   ;; hide column numbers
-  (setq column-number-mode t)
+  (setq column-number-mode nil)
 
   ;; always hightlight current line
   (global-hl-line-mode t)
@@ -33,7 +33,7 @@
   (set-face-attribute 'default nil
 		      :family config-font-family
 		      :height config-font-height)
-  (set-frame-parameter nil 'fullscreen 'fullboth)
+  (setq-default fill-column 120)
 
   ;; theme
   ;; This required some fonts to be downloaded, run `all-the-icons-install-fonts` manually
