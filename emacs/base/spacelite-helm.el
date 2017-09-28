@@ -17,7 +17,14 @@
     ag) 
   (use-package 
     helm-ag 
-    :diminish 'helm-mode) 
+    :diminish 'helm-mode)
+  (use-package
+    helm-gtags
+    :init
+    (add-hook 'c-mode-hook 'helm-gtags-mode)
+    (add-hook 'c++-mode-hook 'helm-gtags-mode)
+    (add-hook 'asm-mode-hook 'helm-gtags-mode)
+    )
   (setq helm-prevent-escaping-from-minibuffer t helm-bookmark-show-location 'bottom
 	helm-display-header-line nil helm-split-window-in-side-p t helm-always-two-windows t
 	helm-echo-input-in-header-line t helm-imenu-execute-action-at-once-if-one nil

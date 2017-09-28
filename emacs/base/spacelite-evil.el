@@ -12,7 +12,12 @@
   (spacelite/init-evil-iedit) 
   (use-package 
     evil-surround 
-    :config (global-evil-surround-mode 1)))
+    :config (global-evil-surround-mode 1))
+  (use-package 
+    evil-commentary
+    :config (evil-commentary-mode 't)
+  )
+)
 
 (defun spacelite/init-evil-escape () 
   (use-package 

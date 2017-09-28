@@ -9,7 +9,7 @@
 
 (defun spacelite/init-makeup ()
   ;; hide column numbers
-  (setq column-number-mode nil)
+  (setq column-number-mode 't)
 
   ;; always hightlight current line
   (global-hl-line-mode t)
@@ -33,7 +33,8 @@
   (set-face-attribute 'default nil
 		      :family config-font-family
 		      :height config-font-height)
-  (setq-default fill-column 120)
+  (setq-default fill-column 110)
+  (setq-default tab-width 2)
 
   ;; theme
   ;; This required some fonts to be downloaded, run `all-the-icons-install-fonts` manually
@@ -67,8 +68,20 @@
   ;; Column settings
   (use-package
     column-marker
-    ; :config (add-hook 'foo-mode-hook (lambda() (interactive) (column-marker-1 120)))
+    :ensure t
+    :init (add-hook 'prog-mode-hook 'column-marker-mode)
   )
+
+  ;; Highlighting of the indentation
+  (use-package
+    highlight-indentation
+    :ensure t
+    :init
+    (add-hook 'prog-mode-hook 'highlight-indentation-mode)
+    (add-hook 'prog-mode-hook 'highlight-indentation-current-column-mode)
+   )
+   ;; (set-face-background 'highlight-indentation-face "#e3e3d3")
+   ;; (set-face-background 'highlight-indentation-current-column-face "#c3b3b3")
 
   ;; parenthesis
   (show-paren-mode 1)

@@ -25,8 +25,10 @@
 
   ;; init company mode
   (use-package 
-    company 
-    :diminish 'company-mode) 
+    company
+    :ensure t
+    :init (add-hook 'after-init-hook 'global-company-mode)
+   )
   (define-key company-active-map (kbd "C-j") 'company-select-next) 
   (define-key company-active-map (kbd "C-k") 'company-select-previous) 
   (define-key company-active-map (kbd "C-l") 'company-complete-selection) 
@@ -66,6 +68,11 @@
 
   ;; keep backups
   (setq make-backup-files config-keep-backups)
+
+  ;; yasnippet
+  (use-package yasnippet
+    :ensure t
+  )
   
   (spacelite/set-leader-keys "qr" 'spacelite/restart-emacs "qq" 'spacelite/prompt-kill-emacs))
 

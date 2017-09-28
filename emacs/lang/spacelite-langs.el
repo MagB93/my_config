@@ -8,19 +8,21 @@
 ;;; License: GPLv3
 
 (require 'spacelite-scala)
+(require 'cpp-cmake)
 (require 'spacelite-markdown)
 (require 'spacelite-ess)
 (require 'spacelite-lisp)
 (require 'spacelite-python)
-(require 'spacelite-julia)
+;;(require 'spacelite-julia)
 
 (defun spacelite/init-langs ()
+  (spacelite/init-cpp)
   (spacelite/init-scala)
   (spacelite/init-markdown)
   (spacelite/init-ess)
   (spacelite/init-lisp)
   (spacelite/init-python)
-  (spacelite/init-julia)
+  ;;(spacelite/init-julia)
 )
 
 (provide 'spacelite-langs)
