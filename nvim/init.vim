@@ -7,15 +7,12 @@ call plug#begin()
 Plug 'tpope/vim-surround' " surround selections with things like quotes, parens, brakcets, etc.
 Plug 'tpope/vim-commentary'
 
-Plug 'pangloss/vim-javascript'
-
   " NERD tree will be loaded on the first invocation of NERDTreeToggle command
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'tpope/vim-fugitive' " Git utilities
 Plug 'tpope/vim-unimpaired'
 Plug 'airblade/vim-gitgutter' " show the differences
-Plug 'https://github.com/jceb/vim-orgmode.git'
 Plug 'jalcine/cmake.vim'
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 Plug 'mhinz/vim-startify'  " Nice startup screen
@@ -31,13 +28,14 @@ Plug 'Shougo/echodoc'
 Plug 'myusuf3/numbers.vim'
 Plug 'wellle/targets.vim'
 Plug 'vimwiki/vimwiki'
-Plug 'yuttie/comfortable-motion.vim'
+Plug 'neovimhaskell/haskell-vim'
 
 " Deoplete engines
 Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
 Plug 'tweekmonster/deoplete-clang2'
 Plug 'poppyschmo/deoplete-latex'
 Plug 'zchee/deoplete-jedi'
+Plug 'eagletmt/neco-ghc'
 Plug 'tenfyzhong/CompleteParameter.vim'
 
 Plug 'Shougo/denite.nvim'
@@ -54,11 +52,9 @@ Plug 'wesQ3/vim-windowswap'
 Plug 'https://github.com/ryanoasis/vim-devicons.git'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'KabbAmine/zeavim.vim'
 Plug 'https://github.com/mbbill/undotree.git'
 Plug 'KabbAmine/vim-polyglot'
 Plug 'vim-scripts/fortran.vim'
-Plug 'jiangxincode/mpi.vim'
 Plug 'honza/vim-snippets' " Snippets are separated from the engine. Add this if you want them:
 Plug 'SirVer/ultisnips' " Track the engine.
 Plug 'synzox/ultisnips-fortran'
@@ -313,6 +309,16 @@ call plug#end()
     nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
     nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
     nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+
+    " HASKELL-Config
+    let g:haskell_indent_if = 2 " use a 2 indent level
+    let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
+    let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
+    let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
+    let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
+    let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
+    let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
+    let g:haskell_backpack = 1                " to enable highlighting of backpack keywords   
 
     " NEOTERM ------
     " mapping for leaving terminal input mode
