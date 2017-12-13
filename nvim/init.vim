@@ -8,12 +8,11 @@ Plug 'tpope/vim-surround' " surround selections with things like quotes, parens,
 Plug 'tpope/vim-commentary'
 
   " NERD tree will be loaded on the first invocation of NERDTreeToggle command
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'tpope/vim-fugitive' " Git utilities
 Plug 'tpope/vim-unimpaired'
 Plug 'airblade/vim-gitgutter' " show the differences
 Plug 'jalcine/cmake.vim'
+Plug 'Valloric/YouCompleteMe'
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 Plug 'mhinz/vim-startify'  " Nice startup screen
 Plug 'tpope/vim-obsession'
@@ -28,17 +27,11 @@ Plug 'Shougo/echodoc'
 Plug 'myusuf3/numbers.vim'
 Plug 'wellle/targets.vim'
 Plug 'vimwiki/vimwiki'
-Plug 'neovimhaskell/haskell-vim'
 
-" Deoplete engines
-Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
-Plug 'tweekmonster/deoplete-clang2'
-Plug 'poppyschmo/deoplete-latex'
-Plug 'zchee/deoplete-jedi'
-Plug 'eagletmt/neco-ghc'
+Plug 'Shougo/vimfiler'
 Plug 'tenfyzhong/CompleteParameter.vim'
+Plug 'lyuts/vim-rtags'
 
-Plug 'Shougo/denite.nvim'
 Plug 'luochen1990/rainbow'
 Plug 'JuliaLang/julia-vim'
 Plug 'autozimu/LanguageClient-neovim'
@@ -54,13 +47,10 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'https://github.com/mbbill/undotree.git'
 Plug 'KabbAmine/vim-polyglot'
-Plug 'vim-scripts/fortran.vim'
 Plug 'honza/vim-snippets' " Snippets are separated from the engine. Add this if you want them:
 Plug 'SirVer/ultisnips' " Track the engine.
-Plug 'synzox/ultisnips-fortran'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
-Plug 'https://github.com/vim-scripts/LanguageTool.git'
 Plug 'kassio/neoterm' " better terminal
 Plug 'aklt/plantuml-syntax'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -90,7 +80,10 @@ call plug#end()
     set hidden
 
     " Encoding
-    set encoding=utf-8
+    let user=$USER
+    if user == 'mbad'
+        set encoding="ISO8859-1"
+    endif
 
     " Rendering
     set ttyfast
@@ -102,7 +95,7 @@ call plug#end()
 
     set laststatus=2
 
-    " , is the leader key
+    " Spacekey is  is the leader key
     let mapleader = ","
 
     set splitbelow
@@ -125,16 +118,16 @@ call plug#end()
     set wrap
     set textwidth=120
     set colorcolumn=120
-    set tabstop=4
-    set shiftwidth=4
-    set softtabstop=4
+    set tabstop=2
+    set shiftwidth=2
+    set softtabstop=2
     set expandtab
     set autoindent
     set fileformat=unix
     set noshiftround
 
     " Cursor motion
-    set scrolloff=3
+    set scrolloff=14
     set backspace=indent,eol,start
     set matchpairs+=<:> " use % to jump between pairs
 
@@ -158,11 +151,8 @@ call plug#end()
     set cursorcolumn
 
     " code folding
-    set foldmethod=indent
+    set foldmethod=manual
     set foldlevel=4
-
-    " Enable folding with the space bar
-    nnoremap <space> za
 
     " Searching
     set hlsearch
@@ -170,10 +160,10 @@ call plug#end()
     set ignorecase
     set smartcase
     set showmatch
-    map <leader><space> :let @/=''<cr> " clear search
 
     " Set the backup directory
     set clipboard=unnamed
+
     " Move up/down editor lines
     nnoremap j gj
     nnoremap k gk
@@ -223,8 +213,9 @@ call plug#end()
     let g:pymode_motion = 1
     let g:pymode_python = 'python3'
 
-    " toogle NERDtree via ctrl n
-    map <C-n> :NERDTreeToggle<CR>
+    " Settings for the file viewer
+    map <C-n> :<CR>
+
     " Plugin key-mappings.
     " Note: It must be "imap" and "smap".  It uses <Plug> mappings.
     imap <C-k>     <Plug>(neosnippet_expand_or_jump)
@@ -239,10 +230,6 @@ call plug#end()
      \ "\<Plug>(neosnippet_expand_or_jump)"
      \: "\<TAB>"
 
-    let g:languagetool_jar="$OPT/LanguageTool-3.8/languagetool-commandline.jar"
-    nnoremap <leader>l :LanguageToolCheck<CR>
-    nnoremap <leader>c :LanguageToolClear<CR>
-
     " Tagbar config
     nmap <F8> :TagbarToggle<CR>
 
@@ -253,20 +240,20 @@ call plug#end()
     vnoremap <C-c> "*y
 
     " Fugitive configureation
-    nnoremap <space>ga :Git add %:p<CR><CR>
-    nnoremap <space>gs :Gstatus<CR>
-    nnoremap <space>gc :Gcommit -v -q<CR>
-    nnoremap <space>gt :Gcommit -v -q %:p<CR>
-    nnoremap <space>gd :Gdiff<CR>
-    nnoremap <space>ge :Gedit<CR>
-    nnoremap <space>gr :Gread<CR>
-    nnoremap <space>gw :Gwrite<CR><CR>
-    nnoremap <space>gl :silent! Glog<CR>:bot copen<CR>
-    nnoremap <space>gp :Ggrep<Space>
-    nnoremap <space>gm :Gmove<Space>
-    nnoremap <space>gb :Git branch<Space>
-    nnoremap <space>go :Git checkout<Space>
-    nnoremap <space>gps :Dispatch! git push<CR>
+    nnoremap <leader>ga :Git add %:p<CR><CR>
+    nnoremap <leader>gs :Gstatus<CR>
+    nnoremap <leader>gc :Gcommit -v -q<CR>
+    nnoremap <leader>gt :Gcommit -v -q %:p<CR>
+    nnoremap <leader>gd :Gdiff<CR>
+    nnoremap <leader>ge :Gedit<CR>
+    nnoremap <leader>gr :Gread<CR>
+    nnoremap <leader>gw :Gwrite<CR><CR>
+    nnoremap <leader>gl :silent! Glog<CR>:bot copen<CR>
+    nnoremap <leader>gp :Ggrep<Space>
+    nnoremap <leader>gm :Gmove<Space>
+    nnoremap <leader>gb :Git branch<Space>
+    nnoremap <leader>go :Git checkout<Space>
+    nnoremap <leader>gps :Dispatch! git push<CR>
     nnoremap <space>gpl :Dispatch! git pull<CR>
 
     " Fortran openmp highlighting
@@ -274,15 +261,6 @@ call plug#end()
     let fortran_fold=1
     let fortran_fold_multilinecomments=1
     let fortran_fold_conditionals=1
-
-    let s:extfname = expand("%:e")
-    if s:extfname ==? "f90"
-       let fortran_free_source=1
-       unlet! fortran_fixed_source
-    else
-       let fortran_fixed_source=1
-       unlet! fortran_free_source
-    endif
 
     " OMP directives
     syn region fortranDirective start=/!$omp.\{-}/ end=/[^\&]$/
@@ -304,21 +282,12 @@ call plug#end()
     \       server.runlinter = true;
     \       run(server);
     \   '],
+    \   'fortran': ['fortls','','']
     \ }
 
     nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
     nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
     nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
-
-    " HASKELL-Config
-    let g:haskell_indent_if = 2 " use a 2 indent level
-    let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
-    let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
-    let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
-    let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
-    let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
-    let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
-    let g:haskell_backpack = 1                " to enable highlighting of backpack keywords   
 
     " NEOTERM ------
     " mapping for leaving terminal input mode
@@ -364,8 +333,8 @@ call plug#end()
 
     " Default fzf layout
     "u - down / up / left / right
-    let g:fzf_layout = { 'down': '~40%' }
-    nnoremap <c-p> :FZF <CR>
+    let g:fzf_layout = { 'right': '~40%' }
+    nnoremap <leader>p :FZF <CR>
 
     " In Neovim, you can set up fzf window using a Vim command
     let g:fzf_layout = { 'window': 'enew' }
@@ -436,19 +405,19 @@ call plug#end()
     set termguicolors
 
     colorscheme PaperColor "seoul256
-    set background=dark
+    set background=light
     " let g:seoul256_background = 236
 
     map <Leader>bg :let &background = ( &background == "dark"? "light" : "dark" )<CR>
     let g:indent_guides_auto_colors = 2
-    set ts=4 sw=4 et
+    set ts=2 sw=2 et
     let g:indent_guides_start_level = 2
     let g:indent_guides_guide_size = 2
     let g:indent_guides_enable_on_vim_startup = 1
 
     " Airline config
     let g:airline_powerline_fonts = 1
-    let g:airline_theme = 'badwolf'
+    let g:airline_theme = 'papercolor'
     let g:airline#extensions#tabline#enabled = 1
     let g:airline#extensions#tagbar#enabled = 1
     let g:airline#extensions#csv = 1
