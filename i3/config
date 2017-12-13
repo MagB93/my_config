@@ -50,7 +50,7 @@ font pango:Source Code Pro 10
 floating_modifier $mod
 
 # start a st
-bindsym $mod+Return exec xfce4-terminal
+bindsym $mod+Return exec i3-sensible-terminal
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -277,34 +277,28 @@ exec --no-startup-id xfce4-power-manager
 exec --no-startup-id pamac-tray
 exec --no-startup-id clipit
 exec --no-startup-id dropbox start
-exec --no-startup-id xrandr --output HDMI-A-0 --left-of DisplayPort-1 --rotate left
 
-exec --no-startup-id start_conky_maia
+exec --no-startup-id sh /home/magnus/.screenlayout/layout.sh
+exec --no-startup-id redshift
 
 # User keyshortcuts
-exec setxkbmap -option grp:alt_shift_toggle dvorak, de
+bindsym $mod+Shift+F1 exec setxkbmap -option ctrl:swapcaps -layout dvorak
+bindsym $mod+Shift+F2 exec setxkbmap -option ctrl:swapcaps -layout de
 
-bindsym $mod+F1 exec chromium
-bindsym $mod+F2 exec code
+bindsym $mod+F1 exec chromium-browser
+bindsym $mod+F2 exec emacs
 bindsym $mod+F3 exec thunar
 bindsym $mod+F4 exec rhythmbox
-bindsym $mod+F5 exec zeal
-bindsym $mod+F7 exec libreoffice
-bindsym $mod+k exec ksysguard
-
-
 bindsym $mod+F6 exec pavucontrol
-bindsym $mod+p exec paraview
 
 # Start i3bar to display a workspace bar (plus the system information i3status if available)
 bar {
-	status_command $HOME/.config/i3/conky-i3bar
+	status_command i3status -c $HOME/.config/i3/i3status.conf
 	position bottom
 
 ## please set your primary output first. Example: 'xrandr --output eDP1 --primary'
-	tray_output HDMI-A-0
 
-	font pango:Source Code Pro,Icons 8
+	font pango:Hack,Icons 10
  colors {
         background $background
         statusline $foreground
@@ -325,4 +319,3 @@ client.unfocused        #434745 #434745 #16A085 #454948
 client.urgent           #CB4B16 #FDF6E3 #16A085 #268BD2
 client.placeholder      #000000 #0c0c0c #ffffff #000000 #0c0c0c
 client.background       #2B2C2B
-

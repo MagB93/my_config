@@ -76,10 +76,7 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages
-   '(
-     lsp-mode
-     julia-mode
-     )
+   '()
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -154,19 +151,16 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
-                         misterioso
-                         zenburn
-                         anti-zenburn
+                         leuven
                          spacemacs-dark
                          spacemacs-light
-                         gruvbox
                          )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state 't
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Hack"
-                               :size 13
+                               :size 11
                                :weight normal
                                :width normal
                                :powerline-scale 1.2)
@@ -355,7 +349,6 @@ you should place your code here."
   (add-hook 'c++-mode-hook 'clang-format-bindings)
   (setq global-company-mode t)
   (setq-default company-idle-delay 0.3)
-  (set-language-environment "Latin-1")
 
 
 )
