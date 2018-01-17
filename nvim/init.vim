@@ -12,33 +12,36 @@ Plug 'tpope/vim-fugitive' " Git utilities
 Plug 'tpope/vim-unimpaired'
 Plug 'airblade/vim-gitgutter' " show the differences
 Plug 'jalcine/cmake.vim'
-Plug 'Valloric/YouCompleteMe'
+Plug 'pboettch/vim-cmake-syntax'
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 Plug 'mhinz/vim-startify'  " Nice startup screen
 Plug 'tpope/vim-obsession'
+Plug 'sbdchd/neoformat'
+Plug 'dbgx/lldb.nvim'
+Plug 'jeetsukumaran/vim-buffergator'
+Plug 'jceb/vim-orgmode'
 Plug 'https://github.com/nathanaelkane/vim-indent-guides.git'
 Plug 'equalsraf/neovim-gui-shim'
 Plug 'chrisbra/csv.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'w0rp/ale'
-Plug 'rudrab/vimf90'
 Plug 'rhysd/vim-grammarous'
-Plug 'Shougo/echodoc'
 Plug 'myusuf3/numbers.vim'
 Plug 'wellle/targets.vim'
 Plug 'vimwiki/vimwiki'
+Plug 'eugen0329/vim-esearch'
 
-Plug 'Shougo/vimfiler'
+Plug 'Valloric/YouCompleteMe'
+Plug 'eagletmt/neco-ghc'
 Plug 'tenfyzhong/CompleteParameter.vim'
-Plug 'lyuts/vim-rtags'
 
+Plug 'Shougo/denite.nvim'
 Plug 'luochen1990/rainbow'
 Plug 'JuliaLang/julia-vim'
 Plug 'autozimu/LanguageClient-neovim'
 Plug 'roxma/nvim-completion-manager'
 
 Plug 'https://github.com/blueyed/vim-diminactive.git'
-Plug 'lervag/vimtex'
 Plug 'glts/vim-texlog'
 Plug 'jiangmiao/auto-pairs'
 Plug 'wesQ3/vim-windowswap'
@@ -47,19 +50,23 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'https://github.com/mbbill/undotree.git'
 Plug 'KabbAmine/vim-polyglot'
+Plug 'arakashic/chromatica.nvim'
+Plug 'vim-scripts/fortran.vim'
 Plug 'honza/vim-snippets' " Snippets are separated from the engine. Add this if you want them:
 Plug 'SirVer/ultisnips' " Track the engine.
+Plug 'synzox/ultisnips-fortran'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'kassio/neoterm' " better terminal
-Plug 'aklt/plantuml-syntax'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'potatoesmaster/i3-vim-syntax'
 Plug 'junegunn/vim-easy-align'
+Plug 'junegunn/GoYo.vim'
+Plug 'junegunn/limelight.vim'
 
 " Tags
 Plug 'szw/vim-tags'
+Plug 'lyuts/vim-rtags'
 Plug 'https://github.com/majutsushi/tagbar.git'
 Plug 'https://github.com/craigemery/vim-autotag.git'
 
@@ -79,12 +86,6 @@ call plug#end()
     " Allow hidden buffers
     set hidden
 
-    " Encoding
-    let user=$USER
-    if user == 'mbad'
-        set encoding="ISO8859-1"
-    endif
-
     " Rendering
     set ttyfast
 
@@ -95,7 +96,7 @@ call plug#end()
 
     set laststatus=2
 
-    " Spacekey is  is the leader key
+    " , is the leader key
     let mapleader = ","
 
     set splitbelow
@@ -118,11 +119,13 @@ call plug#end()
     set wrap
     set textwidth=120
     set colorcolumn=120
+
+    set expandtab
     set tabstop=2
     set shiftwidth=2
     set softtabstop=2
-    set expandtab
-    set autoindent
+
+    set smartindent
     set fileformat=unix
     set noshiftround
 
@@ -160,10 +163,10 @@ call plug#end()
     set ignorecase
     set smartcase
     set showmatch
+    map <leader><space> :let @/=''<cr> " clear search
 
     " Set the backup directory
     set clipboard=unnamed
-
     " Move up/down editor lines
     nnoremap j gj
     nnoremap k gk
@@ -173,6 +176,11 @@ call plug#end()
     noremap <C-K> <C-W><C-K>
     noremap <C-L> <C-W><C-L>
     noremap <C-H> <C-W><C-H>
+
+    " Quick a new tab!
+    nmap <leader>T :enew<CR>
+    nmap <leader>N gt<CR>
+    nmap <leader>P gT<CR>
 
     " QUICK SAVE
     " ==========
@@ -197,9 +205,6 @@ call plug#end()
     " Start the rainbow_parentheses improved stuff
     let g:rainbow_active = 1
 
-    " Use deoplete.
-    let g:deoplete#enable_at_startup = 1
-    let g:deoplete#enable_smart_case = 1
     inoremap <silent><expr> ( complete_parameter#pre_complete("()")
     smap <c-j> <Plug>(complete_parameter#goto_next_parameter)
     imap <c-j> <Plug>(complete_parameter#goto_next_parameter)
@@ -213,14 +218,11 @@ call plug#end()
     let g:pymode_motion = 1
     let g:pymode_python = 'python3'
 
-    " Settings for the file viewer
-    map <C-n> :<CR>
-
     " Plugin key-mappings.
     " Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-    imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-    smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-    xmap <C-k>     <Plug>(neosnippet_expand_target)
+    imap <leader>k     <Plug>(neosnippet_expand_or_jump)
+    smap <leader>k   <Plug>(neosnippet_expand_or_jump)
+    xmap <leader>k     <Plug>(neosnippet_expand_target)
 
     " SuperTab like snippets' behavior.
     imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
@@ -231,29 +233,32 @@ call plug#end()
      \: "\<TAB>"
 
     " Tagbar config
-    nmap <F8> :TagbarToggle<CR>
+    nmap <leader><F8> :TagbarToggle<CR>
 
     " Undo tree
-    nnoremap <F4> :UndotreeToggle<CR>
+    nnoremap <leader><F4> :UndotreeToggle<CR>
 
     " For Ctrl + copy
     vnoremap <C-c> "*y
+    nnoremap <C-s> :w<CR>
+    nnoremap <C-s>a :wa<CR>
+
 
     " Fugitive configureation
-    nnoremap <leader>ga :Git add %:p<CR><CR>
-    nnoremap <leader>gs :Gstatus<CR>
-    nnoremap <leader>gc :Gcommit -v -q<CR>
-    nnoremap <leader>gt :Gcommit -v -q %:p<CR>
-    nnoremap <leader>gd :Gdiff<CR>
-    nnoremap <leader>ge :Gedit<CR>
-    nnoremap <leader>gr :Gread<CR>
-    nnoremap <leader>gw :Gwrite<CR><CR>
-    nnoremap <leader>gl :silent! Glog<CR>:bot copen<CR>
-    nnoremap <leader>gp :Ggrep<Space>
-    nnoremap <leader>gm :Gmove<Space>
-    nnoremap <leader>gb :Git branch<Space>
-    nnoremap <leader>go :Git checkout<Space>
-    nnoremap <leader>gps :Dispatch! git push<CR>
+    nnoremap <space>ga :Git add %:p<CR><CR>
+    nnoremap <space>gs :Gstatus<CR>
+    nnoremap <space>gc :Gcommit -v -q<CR>
+    nnoremap <space>gt :Gcommit -v -q %:p<CR>
+    nnoremap <space>gd :Gdiff<CR>
+    nnoremap <space>ge :Gedit<CR>
+    nnoremap <space>gr :Gread<CR>
+    nnoremap <space>gw :Gwrite<CR><CR>
+    nnoremap <space>gl :silent! Glog<CR>:bot copen<CR>
+    nnoremap <space>gp :Ggrep<Space>
+    nnoremap <space>gm :Gmove<Space>
+    nnoremap <space>gb :Git branch<Space>
+    nnoremap <space>go :Git checkout<Space>
+    nnoremap <space>gps :Dispatch! git push<CR>
     nnoremap <space>gpl :Dispatch! git pull<CR>
 
     " Fortran openmp highlighting
@@ -261,6 +266,15 @@ call plug#end()
     let fortran_fold=1
     let fortran_fold_multilinecomments=1
     let fortran_fold_conditionals=1
+
+    let s:extfname = expand("%:e")
+    if s:extfname ==? "f90"
+       let fortran_free_source=1
+       unlet! fortran_fixed_source
+    else
+       let fortran_fixed_source=1
+       unlet! fortran_free_source
+    endif
 
     " OMP directives
     syn region fortranDirective start=/!$omp.\{-}/ end=/[^\&]$/
@@ -272,7 +286,6 @@ call plug#end()
     " Modify the default lisp type to the julia type for neoterm
     au VimEnter,BufRead,BufNewFile *.jl set filetype=julia
 
-
     " language server
     let g:LanguageClient_autoStart = 1
     let g:LanguageClient_serverCommands = {
@@ -282,12 +295,21 @@ call plug#end()
     \       server.runlinter = true;
     \       run(server);
     \   '],
-    \   'fortran': ['fortls','','']
     \ }
 
     nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
     nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
     nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+
+    " HASKELL-Config
+    let g:haskell_indent_if = 2 " use a 2 indent level
+    let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
+    let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
+    let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
+    let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
+    let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
+    let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
+    let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
 
     " NEOTERM ------
     " mapping for leaving terminal input mode
@@ -311,8 +333,13 @@ call plug#end()
     " Git commands
     command! -nargs=+ Tg :T git <args>
 
-    " Neomake after each saving
-    " autocmd! BufWritePost * Neomake
+    let g:chromatica#enable_at_startup=1
+    let g:chromatica#libclang_path='/usr/lib/llvm-3.8/lib'
+    let g:chromatica#highlight_feature_level=1
+    let g:chromatica#responsive_mode=1
+
+    " Ale configuration
+
     let g:ale_set_quickfix = 1
     let g:ale_keep_list_window_open = 1
     let g:ale_open_list = 1
@@ -323,6 +350,14 @@ call plug#end()
     let g:ale_echo_msg_warning_str = 'W'
     let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
+    let g:ale_linters = {
+                \ 'cpp': ['clang-format', 'clang', 'cppcheck'],
+                \ 'vim': ['vint'],
+                \ 'python': [ 'autopep8', 'flake8' ]
+                \}
+
+    nnoremap <C-N> :bnext<CR>
+    nnoremap <C-P> :bprev<CR>
 
     "==== FZF config
     " This is the default extra key bindings
@@ -333,12 +368,13 @@ call plug#end()
 
     " Default fzf layout
     "u - down / up / left / right
-    let g:fzf_layout = { 'right': '~40%' }
-    nnoremap <leader>p :FZF <CR>
+    let g:fzf_layout = { 'down': '~40%' }
+    nnoremap <Leader>p :FZF <CR>
 
     " In Neovim, you can set up fzf window using a Vim command
     let g:fzf_layout = { 'window': 'enew' }
     let g:fzf_layout = { 'window': '-tabnew' }
+    let g:fzf_layout = { 'window': '10split enew' }
 
     " Customize fzf colors to match your color scheme
     let g:fzf_colors =
@@ -398,10 +434,24 @@ call plug#end()
 
     autocmd! User FzfStatusLine call <SID>fzf_statusline()
 
-" ===== Colorscheme configuration
-    " Visualize tabs and newlines
-    set listchars=tab:▸\ ,eol:¬
+    " LLDB - Configuration
+    nmap <F3> <Plug>LLBreakSwitch
+    vmap <F2> <Plug>LLStdInSelected
+    nnoremap <F4> :LLstdin<CR>
+    nnoremap <F5> :LLmode debug<CR>
+    nnoremap <S-F5> :LLmode code<CR>
+    nnoremap <F8> :LL continue<CR>
+    nnoremap <F9> :LL print <C-R>=expand('<cword>')<CR>
+    vnoremap <F9> :<C-U>LL print <C-R>=lldb#util#get_selection()<CR><CR>
 
+    " ==== YCM configuration
+    nnoremap <leader>jh :YcmCompleter GoToInclude<CR>
+    nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
+    nnoremap <leader>jg :YcmCompleter GoTo<CR>
+    nnoremap <leader>jG :YcmCompleter GoToImprecise<CR>
+
+    " ===== Colorscheme configuration
+    " Visualize tabs and newlines
     set termguicolors
 
     colorscheme PaperColor "seoul256
@@ -410,12 +460,14 @@ call plug#end()
 
     map <Leader>bg :let &background = ( &background == "dark"? "light" : "dark" )<CR>
     let g:indent_guides_auto_colors = 2
-    set ts=2 sw=2 et
+    set ts=4 sw=4 et
     let g:indent_guides_start_level = 2
     let g:indent_guides_guide_size = 2
     let g:indent_guides_enable_on_vim_startup = 1
 
     " Airline config
+    let g:airline#extensions#tabline#tab_nr_type = 2
+    let g:airline#extensions#tabline#show_tab_type = 0
     let g:airline_powerline_fonts = 1
     let g:airline_theme = 'papercolor'
     let g:airline#extensions#tabline#enabled = 1
@@ -423,7 +475,20 @@ call plug#end()
     let g:airline#extensions#csv = 1
     let g:airline#extensions#ale#enabled = 1
 
-    " Adds the window number to the front
+  let g:airline#extensions#tabline#buffer_idx_mode = 1
+  nmap <leader>1 <Plug>AirlineSelectTab1
+  nmap <leader>2 <Plug>AirlineSelectTab2
+  nmap <leader>3 <Plug>AirlineSelectTab3
+  nmap <leader>4 <Plug>AirlineSelectTab4
+  nmap <leader>5 <Plug>AirlineSelectTab5
+  nmap <leader>6 <Plug>AirlineSelectTab6
+  nmap <leader>7 <Plug>AirlineSelectTab7
+  nmap <leader>8 <Plug>AirlineSelectTab8
+  nmap <leader>9 <Plug>AirlineSelectTab9
+      nmap <leader>- <Plug>AirlineSelectPrevTab
+    nmap <leader>+ <Plug>AirlineSelectNextTab
+
+        " Adds the window number to the front
     function! WindowNumber(...)
         let builder = a:1
         let context = a:2
