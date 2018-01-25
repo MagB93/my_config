@@ -28,6 +28,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     javascript
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -37,6 +38,7 @@ values."
      helm
      syntax-checking
      (auto-completion :variables
+                      auto-completion-complete-with-key-sequence "<tab> <tab>"
                       auto-completion-enable-snippets-in-popup t
                       auto-completion-enable-help-tooltip t)
      better-defaults
@@ -65,12 +67,10 @@ values."
      (c-c++ :variables
             c-c++-default-mode-for-headers 'c++-mode
             c-c++-enable-clang-support t)
+     ycmd
      org
-     (haskell :variables
-              haskell-completion-backend 'ghc-mod
-              haskell-enable-hindent-style "john-tibell")
      plantuml
-     )
+    )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
@@ -141,7 +141,7 @@ values."
    ;; `recents' `bookmarks' `projects' `agenda' `todos'."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((recents . 10)
+   dotspacemacs-startup-lists '((recents . 20)
                                 (projects . 15))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive t
@@ -152,18 +152,20 @@ values."
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
                          leuven
-                         spacemacs-dark
                          spacemacs-light
+                         spacemacs-dark
+                         zenburn
+                         anti-zenburn
                          )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state 't
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Hack"
-                               :size 11
+                               :size 12
                                :weight normal
                                :width normal
-                               :powerline-scale 1.2)
+                               :powerline-scale 1.1)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
@@ -225,7 +227,7 @@ values."
    dotspacemacs-helm-no-header nil
    ;; define the position to display `helm', options are `bottom', `top',
    ;; `left', or `right'. (default 'bottom)
-   dotspacemacs-helm-position 'top
+   dotspacemacs-helm-position 'bottom
    ;; Controls fuzzy matching in helm. If set to `always', force fuzzy matching
    ;; in all non-asynchronous sources. If set to `source', preserve individual
    ;; source settings. Else, disable fuzzy matching in all sources.
@@ -241,7 +243,7 @@ values."
    ;; `right-then-bottom'. right-then-bottom tries to display the frame to the
    ;; right; if there is insufficient space it displays it at the bottom.
    ;; (default 'bottom)
-   dotspacemacs-which-key-position 'top
+   dotspacemacs-which-key-position 'bottom
    ;; If non nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil to boost the loading time. (default t)
@@ -319,6 +321,7 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+
  )
 
 (defun dotspacemacs/user-config ()
@@ -329,29 +332,60 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   ;; Configure the powerline
-  (setq powerline-default-separator 'arrow-fade)
+  (setq powerline-default-separator 'curve)
   (spacemacs/toggle-indent-guide-globally-on)
   (spacemacs/toggle-camel-case-motion-globally-on)
-  (setq-local indent-tabs-mode nil)
+  (spacemacs/toggle-aggressive-indent-on)
+  (spacemacs/toggle-automatic-symbol-highlight-on)
   (setq-default fill-column 120)
 
 
   (require 'helm-bookmark)
 
   ;; CPP-Config
+  (setq c-default-style "bsd"
+        c-basic-offset 2 )
   (defun enable-gtags-imenu ()
     (setq-local imenu-create-index-function #'ggtags-build-imenu-index)
   )
   (add-hook 'c-mode-hook #'enable-gtags-imenu)
   ;; Bind clang-format-buffer to tab on the c++-mode only:
   (defun clang-format-bindings ()
-    (define-key c++-mode-map [M-tab] 'clang-format-buffer))
+    (define-key c++-mode-map [C-M-tab] 'clang-format-buffer))
   (add-hook 'c++-mode-hook 'clang-format-bindings)
+
+  ;; Zero delay when pressing tab
+  (setq company-idle-delay 0.1)
+  (defun clang-complete-userbindings ()
+    (define-key c++-mode-map [M-tab] 'company-complete))
+  (add-hook 'c++-mode-hook 'clang-complete-userbindings )
+
+  (setq ycmd-server-command '("python" "/home/mbad/opt/ycmd/ycmd"))
+  (setq ycmd-force-semantic-completion t)
+
+  ;; Delay when idle because I want to be able to think
+  (setq company-idle-delay 0.2)
   (setq global-company-mode t)
-  (setq-default company-idle-delay 0.3)
+
+
 
 
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (flycheck-ycmd company-ycmd ycmd request-deferred deferred ghub helm-gtags ggtags powerline spinner tablist org-category-capture alert log4e gntp skewer-mode simple-httpd json-snatcher json-reformat multiple-cursors js2-mode parent-mode request parsebib gitignore-mode fringe-helper git-gutter+ git-gutter flyspell-correct flycheck pkg-info epl flx git-commit with-editor iedit anzu highlight dash-functional tern pos-tip company levenshtein bind-map biblio biblio-core yasnippet packed auctex anaconda-mode pythonic dash s avy async auto-complete popup window-numbering spacemacs-theme ido-vertical-mode quelpa package-build use-package org-ref ivy imenu-list dumb-jump smartparens evil helm helm-core markdown-mode projectile org-plus-contrib magit magit-popup hydra f yapfify yaml-mode xterm-color ws-butler winum which-key web-beautify volatile-highlights vi-tilde-fringe uuidgen unfill undo-tree toc-org stickyfunc-enhance srefactor spaceline smeargle shell-pop rtags restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin plantuml-mode pip-requirements persp-mode pdf-tools pcre2el paradox orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file neotree mwim multi-term move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint key-chord json-mode js2-refactor js-doc insert-shebang info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-bibtex helm-ag goto-chg google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy flyspell-correct-helm flycheck-pos-tip flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help engine-mode elisp-slime-nav disaster diminish diff-hl define-word cython-mode company-tern company-statistics company-shell company-quickhelp company-c-headers company-auctex company-anaconda column-enforce-mode color-identifiers-mode coffee-mode cmake-mode cmake-ide clean-aindent-mode clang-format bind-key auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+ '(safe-local-variable-values (quote ((set-language-environment "Latin-1")))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

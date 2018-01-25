@@ -28,8 +28,7 @@ Plug 'w0rp/ale'
 Plug 'rhysd/vim-grammarous'
 Plug 'myusuf3/numbers.vim'
 Plug 'wellle/targets.vim'
-Plug 'vimwiki/vimwiki'
-Plug 'eugen0329/vim-esearch'
+Plug 'brooth/far.vim'
 
 Plug 'Valloric/YouCompleteMe'
 Plug 'eagletmt/neco-ghc'
@@ -51,7 +50,6 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'https://github.com/mbbill/undotree.git'
 Plug 'KabbAmine/vim-polyglot'
 Plug 'arakashic/chromatica.nvim'
-Plug 'vim-scripts/fortran.vim'
 Plug 'honza/vim-snippets' " Snippets are separated from the engine. Add this if you want them:
 Plug 'SirVer/ultisnips' " Track the engine.
 Plug 'synzox/ultisnips-fortran'
@@ -78,6 +76,8 @@ Plug 'fmoralesc/molokayo'  " Better molokai, requires molokai though
 Plug 'https://github.com/hhsnopek/vim-firewatch.git'
 Plug 'morhetz/gruvbox'
 Plug 'https://github.com/rakr/vim-two-firewatch.git'
+Plug 'ayu-theme/ayu-vim'
+Plug 'iCyMind/NeoSolarized'
 
 call plug#end()
 
@@ -93,8 +93,6 @@ call plug#end()
     let python_highlight_all=1
     filetype plugin indent on
     syntax on
-
-    set laststatus=2
 
     " , is the leader key
     let mapleader = ","
@@ -121,13 +119,13 @@ call plug#end()
     set colorcolumn=120
 
     set expandtab
+    set autoindent
+    set smartindent
     set tabstop=2
     set shiftwidth=2
     set softtabstop=2
 
-    set smartindent
     set fileformat=unix
-    set noshiftround
 
     " Cursor motion
     set scrolloff=14
@@ -266,15 +264,8 @@ call plug#end()
     let fortran_fold=1
     let fortran_fold_multilinecomments=1
     let fortran_fold_conditionals=1
-
-    let s:extfname = expand("%:e")
-    if s:extfname ==? "f90"
-       let fortran_free_source=1
-       unlet! fortran_fixed_source
-    else
-       let fortran_fixed_source=1
-       unlet! fortran_free_source
-    endif
+    let fortran_free_source=1
+    let fortran_do_enddo=1
 
     " OMP directives
     syn region fortranDirective start=/!$omp.\{-}/ end=/[^\&]$/
@@ -287,7 +278,7 @@ call plug#end()
     au VimEnter,BufRead,BufNewFile *.jl set filetype=julia
 
     " language server
-    let g:LanguageClient_autoStart = 1
+    let g:LanguageClient_autoStart = 0
     let g:LanguageClient_serverCommands = {
     \   'julia': ['julia', '--startup-file=no', '--history-file=no', '-e', '
     \       using LanguageServer;
@@ -335,11 +326,9 @@ call plug#end()
 
     let g:chromatica#enable_at_startup=1
     let g:chromatica#libclang_path='/usr/lib/llvm-3.8/lib'
-    let g:chromatica#highlight_feature_level=1
-    let g:chromatica#responsive_mode=1
+    let g:chromatica#highlight_feature_level=0
 
     " Ale configuration
-
     let g:ale_set_quickfix = 1
     let g:ale_keep_list_window_open = 1
     let g:ale_open_list = 1
@@ -351,7 +340,7 @@ call plug#end()
     let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
     let g:ale_linters = {
-                \ 'cpp': ['clang-format', 'clang', 'cppcheck'],
+                \ 'cpp': ['clang-format', 'clang-check'],
                 \ 'vim': ['vint'],
                 \ 'python': [ 'autopep8', 'flake8' ]
                 \}
@@ -454,9 +443,9 @@ call plug#end()
     " Visualize tabs and newlines
     set termguicolors
 
-    colorscheme PaperColor "seoul256
+    let ayucolor="light"
+    colorscheme NeoSolarized
     set background=light
-    " let g:seoul256_background = 236
 
     map <Leader>bg :let &background = ( &background == "dark"? "light" : "dark" )<CR>
     let g:indent_guides_auto_colors = 2
@@ -468,8 +457,8 @@ call plug#end()
     " Airline config
     let g:airline#extensions#tabline#tab_nr_type = 2
     let g:airline#extensions#tabline#show_tab_type = 0
-    let g:airline_powerline_fonts = 1
-    let g:airline_theme = 'papercolor'
+    let g:airline_powerline_fonts = 0
+    let g:airline_theme = 'solarized'
     let g:airline#extensions#tabline#enabled = 1
     let g:airline#extensions#tagbar#enabled = 1
     let g:airline#extensions#csv = 1
