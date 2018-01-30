@@ -30,7 +30,7 @@ Plug 'myusuf3/numbers.vim'
 Plug 'wellle/targets.vim'
 Plug 'brooth/far.vim'
 
-Plug 'Valloric/YouCompleteMe'
+" Plug 'Valloric/YouCompleteMe'
 Plug 'eagletmt/neco-ghc'
 Plug 'tenfyzhong/CompleteParameter.vim'
 
@@ -72,12 +72,8 @@ Plug 'https://github.com/craigemery/vim-autotag.git'
 Plug 'flazz/vim-colorschemes' " Basic colorschemes
 Plug 'tomasr/molokai'
 Plug 'NLKNguyen/papercolor-theme'
-Plug 'fmoralesc/molokayo'  " Better molokai, requires molokai though
-Plug 'https://github.com/hhsnopek/vim-firewatch.git'
-Plug 'morhetz/gruvbox'
-Plug 'https://github.com/rakr/vim-two-firewatch.git'
-Plug 'ayu-theme/ayu-vim'
 Plug 'iCyMind/NeoSolarized'
+Plug 'junegunn/seoul256.vim'
 
 call plug#end()
 
@@ -278,19 +274,26 @@ call plug#end()
     au VimEnter,BufRead,BufNewFile *.jl set filetype=julia
 
     " language server
-    let g:LanguageClient_autoStart = 0
+    let g:LanguageClient_autoStart = 1
     let g:LanguageClient_serverCommands = {
     \   'julia': ['julia', '--startup-file=no', '--history-file=no', '-e', '
     \       using LanguageServer;
     \       server = LanguageServer.LanguageServerInstance(STDIN, STDOUT, false);
     \       server.runlinter = true;
-    \       run(server);
-    \   '],
+    \       run(server);'],
+    \   'cpp': ['cquery', '--log-file=/tmp/cq.log'],
+    \   'c': ['cquery', '--log-file=/tmp/cq.log'],
     \ }
+    let g:LanguageClient_loadSettings = 1
+    let g:LanguageClient_settingsPath = '$NVIM/settings.json'
+    set completefunc=LanguageClient#complete
+    set formatexpr=LanguageClient_textDocument_rangeFormatting()
 
-    nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+    nnoremap <silent> gh :call LanguageClient_textDocument_hover()<CR>
     nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-    nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+    nnoremap <silent> gr :call LanguageClient_textDocument_references()<CR>
+    nnoremap <silent> gs :call LanguageClient_textDocument_documentSymbol()<CR>
+    nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>'
 
     " HASKELL-Config
     let g:haskell_indent_if = 2 " use a 2 indent level
@@ -434,16 +437,17 @@ call plug#end()
     vnoremap <F9> :<C-U>LL print <C-R>=lldb#util#get_selection()<CR><CR>
 
     " ==== YCM configuration
-    nnoremap <leader>jh :YcmCompleter GoToInclude<CR>
-    nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
-    nnoremap <leader>jg :YcmCompleter GoTo<CR>
-    nnoremap <leader>jG :YcmCompleter GoToImprecise<CR>
+    " nnoremap <leader>jh :YcmCompleter GoToInclude<CR>
+    " nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
+    " nnoremap <leader>jg :YcmCompleter GoTo<CR>
+    " nnoremap <leader>jG :YcmCompleter GoToImprecise<CR>
 
     " ===== Colorscheme configuration
     " Visualize tabs and newlines
     set termguicolors
 
-    let ayucolor="light"
+    " colorscheme NeoSolarized
+    let g:seoul256_background=254
     colorscheme NeoSolarized
     set background=light
 
