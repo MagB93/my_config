@@ -30,7 +30,6 @@ Plug 'myusuf3/numbers.vim'
 Plug 'wellle/targets.vim'
 Plug 'brooth/far.vim'
 
-" Plug 'Valloric/YouCompleteMe'
 Plug 'eagletmt/neco-ghc'
 Plug 'tenfyzhong/CompleteParameter.vim'
 
@@ -281,19 +280,21 @@ call plug#end()
     \       server = LanguageServer.LanguageServerInstance(STDIN, STDOUT, false);
     \       server.runlinter = true;
     \       run(server);'],
-    \   'cpp': ['cquery', '--log-file=/tmp/cq.log'],
-    \   'c': ['cquery', '--log-file=/tmp/cq.log'],
+    \   'cpp': ['cquery', '--language-server', '--log-file=/tmp/cq.log'],
+    \   'c': ['cquery', '--language-server', '--log-file=/tmp/cq.log'],
+    \   'python': ['pyls'],
+    \   'python3': ['pyls']
     \ }
     let g:LanguageClient_loadSettings = 1
-    let g:LanguageClient_settingsPath = '$NVIM/settings.json'
+    let g:LanguageClient_settingsPath = '/home/mbadel/.config/nvim/settings.json'
     set completefunc=LanguageClient#complete
     set formatexpr=LanguageClient_textDocument_rangeFormatting()
 
-    nnoremap <silent> gh :call LanguageClient_textDocument_hover()<CR>
-    nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-    nnoremap <silent> gr :call LanguageClient_textDocument_references()<CR>
-    nnoremap <silent> gs :call LanguageClient_textDocument_documentSymbol()<CR>
-    nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>'
+    nnoremap <leader> gh :call LanguageClient_textDocument_hover()<CR>
+    nnoremap <leader> gd :call LanguageClient_textDocument_definition()<CR>
+    nnoremap <leader> gr :call LanguageClient_textDocument_references()<CR>
+    nnoremap <leader> gs :call LanguageClient_textDocument_documentSymbol()<CR>
+    nnoremap <leader> R :call LanguageClient_textDocument_rename()<CR>
 
     " HASKELL-Config
     let g:haskell_indent_if = 2 " use a 2 indent level
@@ -435,12 +436,6 @@ call plug#end()
     nnoremap <F8> :LL continue<CR>
     nnoremap <F9> :LL print <C-R>=expand('<cword>')<CR>
     vnoremap <F9> :<C-U>LL print <C-R>=lldb#util#get_selection()<CR><CR>
-
-    " ==== YCM configuration
-    " nnoremap <leader>jh :YcmCompleter GoToInclude<CR>
-    " nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
-    " nnoremap <leader>jg :YcmCompleter GoTo<CR>
-    " nnoremap <leader>jG :YcmCompleter GoToImprecise<CR>
 
     " ===== Colorscheme configuration
     " Visualize tabs and newlines
