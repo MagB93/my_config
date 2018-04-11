@@ -17,6 +17,7 @@
 ;; the following lines tell emacs where on the internet to look up
 ;; for new packages.
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize) ; guess what this one does ?
 
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package) ; unless it is already installed
@@ -25,14 +26,10 @@
 
 (require 'use-package) ; guess what this one does too ?
 
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-
-; (require 'init-ivy)
-(require 'init-lsp)
-(require 'init-general)
-(require 'init-keybindings)
-
-(setq use-package-always-ensure t)
+(use-package general :ensure t
+  :config
+  (general-define-key "C-'" 'avy-goto-word-1)
+  )
 
 (use-package avy :ensure t
   :commands (avy-goto-word-1))
