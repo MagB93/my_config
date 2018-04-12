@@ -1,17 +1,19 @@
 ;; add MELPA package server
+;; (package-initialize)
 (require 'package)
 
-(add-to-list 'package-archives 
-  '("melpa" . "http://melpa.milkbox.net/packages/"))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
 
-(unless package-archive-contents
-  (package-refresh-contents))
-
-(package-initialize)
+(setq package-enable-at-startup nil)
 
 ;; if not yet installed, install package use-package
 (unless (package-installed-p 'use-package)
+  (package-refresh-contents)
   (package-install 'use-package))
+
+(eval-when-compile (require 'use-package))
 
 ;; load org package and our emacs-config.org file
 (require 'org)
