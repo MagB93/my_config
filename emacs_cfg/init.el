@@ -1,5 +1,5 @@
 ;; add MELPA package server
-;; (package-initialize)
+(package-initialize)
 (require 'package)
 
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
