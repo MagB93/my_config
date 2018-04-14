@@ -76,6 +76,17 @@
 )
 #+END_SRC
 
+* Yasnippet
+#+BEGIN_SRC emacs-lisp
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode 1)
+)
+(use-package yasnippet-snippets
+  :ensure t
+)
+#+END_SRC
 * Magit
 #+BEGIN_SRC emacs-lisp
 (use-package magit
@@ -88,11 +99,11 @@
 Install EVIL (if not yet installed), and enable it.
 
 #+BEGIN_SRC emacs-lisp
+(setq evil-want-C-u-scroll 't)
 (use-package evil
   :ensure t
   :config
   (evil-mode 1)
-  (setq evil-want-C-u-scroll t)
 )
 
 (use-package evil-commentary
@@ -111,7 +122,7 @@ Install EVIL (if not yet installed), and enable it.
 (use-package org-bullets
     :ensure t
     :config
-    (add-hook 'org-mode-hook (lambda() (org-bulltes-mode 1)))
+    (add-hook 'org-mode-hook (lambda() (org-bullets-mode 1)))
 )
 #+END_SRC
 
@@ -129,8 +140,8 @@ Install EVIL (if not yet installed), and enable it.
 (use-package ivy :demand
   :ensure t
   :config
-  (setq ivy-use-virtual-buffers t
-	ivy-count-format "%d/%d ")
+  (setq ivy-use-virtual-buffers t)
+	(setq ivy-count-format "%d/%d ")
   (ivy-mode 1)
 )
 (use-package ivy-xref
@@ -151,6 +162,35 @@ Install EVIL (if not yet installed), and enable it.
 
 #+END_SRC
 
+* Lisp
+#+BEGIN_SRC emacs-lisp
+  ;; (require 'ac-slime)
+  (use-package ac-slime
+    :ensure t
+    :config
+    (add-hook 'slime-mode-hook 'set-up-slime-ac)
+    (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+    (eval-after-load "auto-complete" '(add-to-list 'ac-modes 'slime-repl-mode 'emacs-lisp-mode))
+
+    (defun ielm-auto-complete ()                               
+    "Enables `auto-complete' support in \\[ielm]."           
+    (setq ac-sources '(ac-source-functions                   
+                       ac-source-variables                   
+                       ac-source-features                    
+                       ac-source-symbols                     
+                       ac-source-words-in-same-mode-buffers))
+    (add-to-list 'ac-modes 'inferior-emacs-lisp-mode)        
+    (auto-complete-mode 1))                                  
+    (add-hook 'ielm-mode-hook 'ielm-auto-complete)
+
+    (add-hook 'ielm-mode-hook #'enable-paredit-mode)
+    (add-hook 'ielm-mode-hook (lambda () (set (make-local-variable 'company-backends) '(company-elisp))))
+
+    (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
+    (add-hook 'emacs-lisp-mode-hook (lambda () (set (make-local-variable 'company-backends) '(company-elisp))))
+    (add-hook 'emacs-lisp-mode-hook 'ielm-auto-complete)
+  )
+#+END_SRC
 * Language-Server-Settings
 
 
@@ -159,6 +199,7 @@ Install EVIL (if not yet installed), and enable it.
 #+BEGIN_SRC emacs-lisp
     (use-package lsp-mode
         :ensure t
+        :defer t
         :config
         (lsp-define-stdio-client
         ;; This can be a symbol of your choosing. It will be used as a the
@@ -212,48 +253,49 @@ Install EVIL (if not yet installed), and enable it.
 #+END_SRC
 ** Cquery
 #+BEGIN_SRC emacs-lisp
-(defun cquery//enable ()
-  (condition-case nil
-      (lsp-cquery-enable)
-    (user-error nil)))
-(use-package cquery
-  :ensure t
-  :commands lsp-cquery-enable
-  :init (add-hook 'c-mode-common-hook #'cquery//enable))
-  :config
-    (setq cquery-executable "~/opt/cquery/build/release/bin/cquery")
+  (defun cquery//enable ()
+    (condition-case nil
+        (lsp-cquery-enable)
+      (user-error nil)))
+  (use-package cquery
+    :ensure t
+    :defer t
+    :commands lsp-cquery-enable
+    :init (add-hook 'c-mode-common-hook #'cquery//enable))
+    :config
+      (setq cquery-executable "~/opt/cquery/build/release/bin/cquery")
 
-    ;; Log file
-    (setq cquery-extra-args '("--log-file=/tmp/cq.log"))
-    
-    ;; Cache directory, both relative and absolute paths are supported
-    (setq cquery-cache-dir "~/.cache/cquery")
-    
-    ;; Initialization options
-    (setq cquery-extra-init-params '(:index (:comment 2) :cacheFormat "msgpack" :completion (:detailedLabel t))))
+      ;; Log file
+      (setq cquery-extra-args '("--log-file=/tmp/cq.log"))
 
-    ;; Better ui
-    (define-key evil-normal-state-map (kbd "C-p") 'lsp-ui-peek-jump-forward)
-    (define-key evil-normal-state-map (kbd "C-t") 'lsp-ui-peek-jump-backward)
+      ;; Cache directory, both relative and absolute paths are supported
+      (setq cquery-cache-dir "~/.cache/cquery")
 
-    ;; Cross reference extension
-    (lsp-ui-peek-find-custom 'base "$cquery/base")
-    (lsp-ui-peek-find-custom 'callers "$cquery/callers")
-    (lsp-ui-peek-find-custom 'random "$cquery/random") ;; jump to a random declaration
+      ;; Initialization options
+      (setq cquery-extra-init-params '(:index (:comment 2) :cacheFormat "msgpack" :completion (:detailedLabel t)))
 
-    ;; Company completion
-    (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
+      ;; Better ui
+      (define-key evil-normal-state-map (kbd "C-p") 'lsp-ui-peek-jump-forward)
+      (define-key evil-normal-state-map (kbd "C-t") 'lsp-ui-peek-jump-backward)
 
-    ;; Semantic highlighting
-    (setq cquery-sem-highlight-method 'font-lock)
+      ;; (cquery-xref-find-custom "$cquery/base")
+      ;; (cquery-xref-find-custom "$cquery/callers")
+      ;; (cquery-xref-find-custom "$cquery/derived")
+      ;; (cquery-xref-find-custom "$cquery/vars")
 
-    ;; For rainbow semantic highlighting
-    (cquery-use-default-rainbow-sem-highlight)
-    (cquery-call-hierarchy nil) ; caller hierarchy
-    (cquery-call-hierarchy t) ; callee hierarchy
-    (cquery-inheritance-hierarchy nil) ; base hierarchy
-    (cquery-inheritance-hierarchy t) ; derived hierarchy
-)
+      ;; Company completion
+      (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
+
+      ;; Semantic highlighting
+      (setq cquery-sem-highlight-method 'font-lock)
+
+      ;; For rainbow semantic highlighting
+      (cquery-use-default-rainbow-sem-highlight)
+      (cquery-call-hierarchy nil) ; caller hierarchy
+      (cquery-call-hierarchy t) ; callee hierarchy
+      (cquery-inheritance-hierarchy nil) ; base hierarchy
+      (cquery-inheritance-hierarchy t) ; derived hierarchy
+  )
 #+END_SRC
 
 ** TODO Julia
