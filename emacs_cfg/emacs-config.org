@@ -159,6 +159,15 @@ Install EVIL (if not yet installed), and enable it.
 
 * C/CPP 
 #+BEGIN_SRC emacs-lisp
+(use-package cmake-mode
+  :ensure t
+  :config
+    (setq auto-mode-alist
+        (append
+        '(("CMakeLists\\.txt\\'" . cmake-mode))
+        '(("\\.cmake\\'" . cmake-mode))
+        auto-mode-alist))
+)
 
 #+END_SRC
 
@@ -236,6 +245,12 @@ Install EVIL (if not yet installed), and enable it.
     :ensure t
     :init 
     (add-hook 'after-init-hook 'global-company-mode)
+    :config
+    (setq company-idle-delay 0.2)
+    (setq company-selection-wrap-around t)
+    (define-key company-active-map [tab] 'company-complete)
+    (define-key company-active-map (kbd "C-n") 'company-select-next)
+    (define-key company-active-map (kbd "C-p") 'company-select-previous
   )
 
   (use-package company-lsp
@@ -322,83 +337,85 @@ Install EVIL (if not yet installed), and enable it.
 **
 
 * Hasklig
-  ;; nice glyphs for haskell with hasklig
-  ;; copied that code from some pastebin, but forgot where
-  (custom-set-variables '(haskell-font-lock-symbols t)
-                        '(haskell-font-lock-symbols-alist
-                          (and (fboundp 'decode-char)
-                              (list (cons "&&" (decode-char 'ucs #XE100))
-                                    (cons "***" (decode-char 'ucs #XE101))
-                                    (cons "*>" (decode-char 'ucs #XE102))
-                                    (cons "\\\\" (decode-char 'ucs #XE103))
-                                    (cons "||" (decode-char 'ucs #XE104))
-                                    (cons "|>" (decode-char 'ucs #XE105))
-                                    (cons "::" (decode-char 'ucs #XE106))
-                                    (cons "==" (decode-char 'ucs #XE107))
-                                    (cons "===" (decode-char 'ucs #XE108))
-                                    (cons "==>" (decode-char 'ucs #XE109))
-                                    (cons "=>" (decode-char 'ucs #XE10A))
-                                    (cons "=<<" (decode-char 'ucs #XE10B))
-                                    (cons "!!" (decode-char 'ucs #XE10C))
-                                    (cons ">>" (decode-char 'ucs #XE10D))
-                                    (cons ">>=" (decode-char 'ucs #XE10E))
-                                    (cons ">>>" (decode-char 'ucs #XE10F))
-                                    (cons ">>-" (decode-char 'ucs #XE110))
-                                    (cons ">-" (decode-char 'ucs #XE111))
-                                    (cons "->" (decode-char 'ucs #XE112))
-                                    (cons "-<" (decode-char 'ucs #XE113))
-                                    (cons "-<<" (decode-char 'ucs #XE114))
-                                    (cons "<*" (decode-char 'ucs #XE115))
-                                    (cons "<*>" (decode-char 'ucs #XE116))
-                                    (cons "<|" (decode-char 'ucs #XE117))
-                                    (cons "<|>" (decode-char 'ucs #XE118))
-                                    (cons "<$>" (decode-char 'ucs #XE119))
-                                    (cons "<>" (decode-char 'ucs #XE11A))
-                                    (cons "<-" (decode-char 'ucs #XE11B))
-                                    (cons "<<" (decode-char 'ucs #XE11C))
-                                    (cons "<<<" (decode-char 'ucs #XE11D))
-                                    (cons "<+>" (decode-char 'ucs #XE11E))
-                                    (cons ".." (decode-char 'ucs #XE11F))
-                                    (cons "..." (decode-char 'ucs #XE120))
-                                    (cons "++" (decode-char 'ucs #XE121))
-                                    (cons "+++" (decode-char 'ucs #XE122))
-                                    (cons "/=" (decode-char 'ucs #XE123))))))
+#+BEGIN_SRC emacs-lisp
+    ;; nice glyphs for haskell with hasklig
+    ;; copied that code from some pastebin, but forgot where
+    (custom-set-variables '(haskell-font-lock-symbols t)
+                          '(haskell-font-lock-symbols-alist
+                            (and (fboundp 'decode-char)
+                                (list (cons "&&" (decode-char 'ucs #XE100))
+                                      (cons "***" (decode-char 'ucs #XE101))
+                                      (cons "*>" (decode-char 'ucs #XE102))
+                                      (cons "\\\\" (decode-char 'ucs #XE103))
+                                      (cons "||" (decode-char 'ucs #XE104))
+                                      (cons "|>" (decode-char 'ucs #XE105))
+                                      (cons "::" (decode-char 'ucs #XE106))
+                                      (cons "==" (decode-char 'ucs #XE107))
+                                      (cons "===" (decode-char 'ucs #XE108))
+                                      (cons "==>" (decode-char 'ucs #XE109))
+                                      (cons "=>" (decode-char 'ucs #XE10A))
+                                      (cons "=<<" (decode-char 'ucs #XE10B))
+                                      (cons "!!" (decode-char 'ucs #XE10C))
+                                      (cons ">>" (decode-char 'ucs #XE10D))
+                                      (cons ">>=" (decode-char 'ucs #XE10E))
+                                      (cons ">>>" (decode-char 'ucs #XE10F))
+                                      (cons ">>-" (decode-char 'ucs #XE110))
+                                      (cons ">-" (decode-char 'ucs #XE111))
+                                      (cons "->" (decode-char 'ucs #XE112))
+                                      (cons "-<" (decode-char 'ucs #XE113))
+                                      (cons "-<<" (decode-char 'ucs #XE114))
+                                      (cons "<*" (decode-char 'ucs #XE115))
+                                      (cons "<*>" (decode-char 'ucs #XE116))
+                                      (cons "<|" (decode-char 'ucs #XE117))
+                                      (cons "<|>" (decode-char 'ucs #XE118))
+                                      (cons "<$>" (decode-char 'ucs #XE119))
+                                      (cons "<>" (decode-char 'ucs #XE11A))
+                                      (cons "<-" (decode-char 'ucs #XE11B))
+                                      (cons "<<" (decode-char 'ucs #XE11C))
+                                      (cons "<<<" (decode-char 'ucs #XE11D))
+                                      (cons "<+>" (decode-char 'ucs #XE11E))
+                                      (cons ".." (decode-char 'ucs #XE11F))
+                                      (cons "..." (decode-char 'ucs #XE120))
+                                      (cons "++" (decode-char 'ucs #XE121))
+                                      (cons "+++" (decode-char 'ucs #XE122))
+                                      (cons "/=" (decode-char 'ucs #XE123))))))
 
-  (defun my-correct-symbol-bounds (pretty-alist)
-    "Prepend a TAB character to each symbol in this alist,
-this way compose-region called by prettify-symbols-mode
-will use the correct width of the symbols
-instead of the width measured by char-width."
-    (mapcar (lambda (el)
-              (setcdr el (string ?\t (cdr el)))
-              el)
-            pretty-alist))
+    (defun my-correct-symbol-bounds (pretty-alist)
+      "Prepend a TAB character to each symbol in this alist,
+  this way compose-region called by prettify-symbols-mode
+  will use the correct width of the symbols
+  instead of the width measured by char-width."
+      (mapcar (lambda (el)
+                (setcdr el (string ?\t (cdr el)))
+                el)
+              pretty-alist))
 
-  (defun my-ligature-list (ligatures codepoint-start)
-    "Create an alist of strings to replace with
-codepoints starting from codepoint-start."
-    (let ((codepoints (-iterate '1+ codepoint-start (length ligatures))))
-      (-zip-pair ligatures codepoints)))
+    (defun my-ligature-list (ligatures codepoint-start)
+      "Create an alist of strings to replace with
+  codepoints starting from codepoint-start."
+      (let ((codepoints (-iterate '1+ codepoint-start (length ligatures))))
+        (-zip-pair ligatures codepoints)))
 
-  ; list can be found at https://github.com/i-tu/Hasklig/blob/master/GlyphOrderAndAliasDB#L1588
-  (setq my-hasklig-ligatures
-    (let* ((ligs '("&&" "***" "*>" "\\\\" "||" "|>" "::"
-                   "==" "===" "==>" "=>" "=<<" "!!" ">>"
-                   ">>=" ">>>" ">>-" ">-" "->" "-<" "-<<"
-                   "<*" "<*>" "<|" "<|>" "<$>" "<>" "<-"
-                   "<<" "<<<" "<+>" ".." "..." "++" "+++"
-                   "/=" ":::" ">=>" "->>" "<=>" "<=<" "<->")))
-      (my-correct-symbol-bounds (my-ligature-list ligs #Xe100))))
+    ; list can be found at https://github.com/i-tu/Hasklig/blob/master/GlyphOrderAndAliasDB#L1588
+    (setq my-hasklig-ligatures
+      (let* ((ligs '("&&" "***" "*>" "\\\\" "||" "|>" "::"
+                     "==" "===" "==>" "=>" "=<<" "!!" ">>"
+                     ">>=" ">>>" ">>-" ">-" "->" "-<" "-<<"
+                     "<*" "<*>" "<|" "<|>" "<$>" "<>" "<-"
+                     "<<" "<<<" "<+>" ".." "..." "++" "+++"
+                     "/=" ":::" ">=>" "->>" "<=>" "<=<" "<->")))
+        (my-correct-symbol-bounds (my-ligature-list ligs #Xe100))))
 
-  ;; nice glyphs for haskell with hasklig
-  (defun my-set-hasklig-ligatures ()
-    "Add hasklig ligatures for use with prettify-symbols-mode."
-    (setq prettify-symbols-alist
-          (append my-hasklig-ligatures prettify-symbols-alist))
-    (prettify-symbols-mode))
+    ;; nice glyphs for haskell with hasklig
+    (defun my-set-hasklig-ligatures ()
+      "Add hasklig ligatures for use with prettify-symbols-mode."
+      (setq prettify-symbols-alist
+            (append my-hasklig-ligatures prettify-symbols-alist))
+      (prettify-symbols-mode))
 
- (add-hook 'prog-mode-hook 'my-set-hasklig-ligatures)
+   (add-hook 'prog-mode-hook 'my-set-hasklig-ligatures)
 
- (add-to-list 'default-frame-alist '(font . Hasklig) )
- (set-face-attribute 'default t :font Hasklig)
+   (add-to-list 'default-frame-alist '(font . "Hasklig 11") )
+   ;; (set-face-attribute 'default t :font Hasklig)
 
+#+END_SRC
