@@ -45,6 +45,7 @@
   :config
   (global-linum-mode)
   (linum-relative-on)
+  (setq linum-relative-current-symbol "")
 )
 
 #+END_SRC
@@ -250,7 +251,7 @@ Install EVIL (if not yet installed), and enable it.
     (setq company-selection-wrap-around t)
     (define-key company-active-map [tab] 'company-complete)
     (define-key company-active-map (kbd "C-n") 'company-select-next)
-    (define-key company-active-map (kbd "C-p") 'company-select-previous
+    (define-key company-active-map (kbd "C-p") 'company-select-previous)
   )
 
   (use-package company-lsp
