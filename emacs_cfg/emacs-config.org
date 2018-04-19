@@ -8,8 +8,35 @@
  The code block below toggle off the welcome startup screen.
 
  #+BEGIN_SRC emacs-lisp
- (custom-set-variables
-   '(inhibit-startup-screen t))
+    (custom-set-variables
+      '(inhibit-startup-screen t))
+   ;; Makes *scratch* empty.
+   (setq initial-scratch-message "")
+
+   ;; Removes *scratch* from buffer after the mode has been set.
+   (defun remove-scratch-buffer ()
+     (if (get-buffer "*scratch*")
+         (kill-buffer "*scratch*")))
+   (add-hook 'after-change-major-mode-hook 'remove-scratch-buffer)
+
+   ;; Removes *messages* from the buffer.
+   (setq-default message-log-max nil)
+   (kill-buffer "*Messages*")
+
+   ;; Removes *Completions* from buffer after you've opened a file.
+   (add-hook 'minibuffer-exit-hook
+         '(lambda ()
+            (let ((buffer "*Completions*"))
+              (and (get-buffer buffer)
+                   (kill-buffer buffer)))))
+
+   ;; Don't show *Buffer list* when opening multiple files at the same time.
+   (setq inhibit-startup-buffer-menu t)
+
+   ;; Show only one active window when opening multiple files at the same time.
+   (add-hook 'window-setup-hook 'delete-other-windows)
+
+
  #+END_SRC
 
 ** Basic Window Config
@@ -30,11 +57,11 @@
   (setq-default indent-tabs-mode nil)
   (setq-default tab-width 2)
 
-  ;; Make tab key call the indent command or insert tab character, depending on the cursor position
-  (setq-default tab-always-indent nil)
+  ;; Make tab key call the indent command 
+  (setq-default tab-always-indent t)
 
   ;; Make the tab key indent first then completion
-  ;; (setq-default tab-always-indent 'complete)
+  (setq-default tab-always-indent 'complete)
 
 #+END_SRC
 
@@ -61,8 +88,16 @@
 
  (use-package rainbow-blocks
    :ensure t
-   :config 
+   :config
    (add-hook 'prog-mode-hook #'rainbow-blocks-mode)
+ )
+
+ (setq-default fill-column 120)
+ (use-package fill-column-indicator
+   :ensure t
+   :config
+   (setq fci-rule-width 1)
+   (add-hook 'prog-mode-hook 'fci-mode)
  )
 
  #+END_SRC
@@ -71,9 +106,9 @@
 #+BEGIN_SRC emacs-lisp
 (use-package spaceline
   :ensure t
-  :config 
+  :config
   (spaceline-spacemacs-theme)
-  
+
 )
 #+END_SRC
 
@@ -109,7 +144,7 @@ Install EVIL (if not yet installed), and enable it.
 
 (use-package evil-commentary
   :ensure t
-  :config 
+  :config
   (evil-commentary-mode)
 )
 
@@ -129,7 +164,7 @@ Install EVIL (if not yet installed), and enable it.
 
 * Projectile
 #+BEGIN_SRC emacs-lisp
-(use-package projectile 
+(use-package projectile
 :ensure t
 :config
 (projectile-mode)
@@ -158,7 +193,7 @@ Install EVIL (if not yet installed), and enable it.
 )
 #+END_SRC
 
-* C/CPP 
+* C/CPP
 #+BEGIN_SRC emacs-lisp
 (use-package cmake-mode
   :ensure t
@@ -182,15 +217,15 @@ Install EVIL (if not yet installed), and enable it.
     (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
     (eval-after-load "auto-complete" '(add-to-list 'ac-modes 'slime-repl-mode 'emacs-lisp-mode))
 
-    (defun ielm-auto-complete ()                               
-    "Enables `auto-complete' support in \\[ielm]."           
-    (setq ac-sources '(ac-source-functions                   
-                       ac-source-variables                   
-                       ac-source-features                    
-                       ac-source-symbols                     
+    (defun ielm-auto-complete ()
+    "Enables `auto-complete' support in \\[ielm]."
+    (setq ac-sources '(ac-source-functions
+                       ac-source-variables
+                       ac-source-features
+                       ac-source-symbols
                        ac-source-words-in-same-mode-buffers))
-    (add-to-list 'ac-modes 'inferior-emacs-lisp-mode)        
-    (auto-complete-mode 1))                                  
+    (add-to-list 'ac-modes 'inferior-emacs-lisp-mode)
+    (auto-complete-mode 1))
     (add-hook 'ielm-mode-hook 'ielm-auto-complete)
 
     (add-hook 'ielm-mode-hook #'enable-paredit-mode)
@@ -237,14 +272,14 @@ Install EVIL (if not yet installed), and enable it.
 
     (use-package lsp-ui
      :ensure t
-     :init 
+     :init
      (add-hook 'lsp-mode-hook 'lsp-ui-mode)
 
     )
 
   (use-package company
     :ensure t
-    :init 
+    :init
     (add-hook 'after-init-hook 'global-company-mode)
     :config
     (setq company-idle-delay 0.2)
@@ -281,6 +316,9 @@ Install EVIL (if not yet installed), and enable it.
     :config
       (setq cquery-executable "~/opt/cquery/build/release/bin/cquery")
 
+      (add-hook 'xref-backend-functions 'lsp--xref-backend)
+      (add-hook 'completion-at-point-functions' lsp-completion-at-point)
+
       ;; Log file
       (setq cquery-extra-args '("--log-file=/tmp/cq.log"))
 
@@ -294,10 +332,10 @@ Install EVIL (if not yet installed), and enable it.
       (define-key evil-normal-state-map (kbd "C-p") 'lsp-ui-peek-jump-forward)
       (define-key evil-normal-state-map (kbd "C-t") 'lsp-ui-peek-jump-backward)
 
-      ;; (cquery-xref-find-custom "$cquery/base")
-      ;; (cquery-xref-find-custom "$cquery/callers")
-      ;; (cquery-xref-find-custom "$cquery/derived")
-      ;; (cquery-xref-find-custom "$cquery/vars")
+      (cquery-xref-find-custom "$cquery/base")
+      (cquery-xref-find-custom "$cquery/callers")
+      (cquery-xref-find-custom "$cquery/derived")
+      (cquery-xref-find-custom "$cquery/vars")
 
       ;; Company completion
       (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
@@ -311,6 +349,7 @@ Install EVIL (if not yet installed), and enable it.
       (cquery-call-hierarchy t) ; callee hierarchy
       (cquery-inheritance-hierarchy nil) ; base hierarchy
       (cquery-inheritance-hierarchy t) ; derived hierarchy
+      (add-hook 'cpp-mode-hook 'lsp-cquery-enable)
   )
 #+END_SRC
 
@@ -416,7 +455,7 @@ Install EVIL (if not yet installed), and enable it.
 
    (add-hook 'prog-mode-hook 'my-set-hasklig-ligatures)
 
-   (add-to-list 'default-frame-alist '(font . "Hasklig 11") )
-   ;; (set-face-attribute 'default t :font Hasklig)
+   (add-to-list 'default-frame-alist '(font . "Hasklig 9") )
+   (set-face-attribute 'default t :font "Hasklig 9")
 
 #+END_SRC

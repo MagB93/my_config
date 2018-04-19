@@ -1,5 +1,5 @@
 ;; add MELPA package server
-(package-initialize)
+;; (package-initialize)
 (require 'package)
 
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
@@ -24,7 +24,87 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(leuven))
+ '(haskell-font-lock-symbols t)
+ '(haskell-font-lock-symbols-alist
+   (and
+    (fboundp 'decode-char)
+    (list
+     (cons "&&"
+           (decode-char 'ucs 57600))
+     (cons "***"
+           (decode-char 'ucs 57601))
+     (cons "*>"
+           (decode-char 'ucs 57602))
+     (cons "\\\\"
+           (decode-char 'ucs 57603))
+     (cons "||"
+           (decode-char 'ucs 57604))
+     (cons "|>"
+           (decode-char 'ucs 57605))
+     (cons "::"
+           (decode-char 'ucs 57606))
+     (cons "=="
+           (decode-char 'ucs 57607))
+     (cons "==="
+           (decode-char 'ucs 57608))
+     (cons "==>"
+           (decode-char 'ucs 57609))
+     (cons "=>"
+           (decode-char 'ucs 57610))
+     (cons "=<<"
+           (decode-char 'ucs 57611))
+     (cons "!!"
+           (decode-char 'ucs 57612))
+     (cons ">>"
+           (decode-char 'ucs 57613))
+     (cons ">>="
+           (decode-char 'ucs 57614))
+     (cons ">>>"
+           (decode-char 'ucs 57615))
+     (cons ">>-"
+           (decode-char 'ucs 57616))
+     (cons ">-"
+           (decode-char 'ucs 57617))
+     (cons "->"
+           (decode-char 'ucs 57618))
+     (cons "-<"
+           (decode-char 'ucs 57619))
+     (cons "-<<"
+           (decode-char 'ucs 57620))
+     (cons "<*"
+           (decode-char 'ucs 57621))
+     (cons "<*>"
+           (decode-char 'ucs 57622))
+     (cons "<|"
+           (decode-char 'ucs 57623))
+     (cons "<|>"
+           (decode-char 'ucs 57624))
+     (cons "<$>"
+           (decode-char 'ucs 57625))
+     (cons "<>"
+           (decode-char 'ucs 57626))
+     (cons "<-"
+           (decode-char 'ucs 57627))
+     (cons "<<"
+           (decode-char 'ucs 57628))
+     (cons "<<<"
+           (decode-char 'ucs 57629))
+     (cons "<+>"
+           (decode-char 'ucs 57630))
+     (cons ".."
+           (decode-char 'ucs 57631))
+     (cons "..."
+           (decode-char 'ucs 57632))
+     (cons "++"
+           (decode-char 'ucs 57633))
+     (cons "+++"
+           (decode-char 'ucs 57634))
+     (cons "/="
+           (decode-char 'ucs 57635)))))
  '(inhibit-startup-screen t)
+ '(initial-buffer-choice nil)
+ '(initial-major-mode 'org-mode)
+ '(linum-relative-current-symbol "")
  '(package-selected-packages '(counsel evil use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
