@@ -102,9 +102,6 @@
      (cons "/="
            (decode-char 'ucs 57635)))))
  '(inhibit-startup-screen t)
- '(initial-buffer-choice nil)
- '(initial-major-mode 'org-mode)
- '(linum-relative-current-symbol "")
  '(package-selected-packages '(counsel evil use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
