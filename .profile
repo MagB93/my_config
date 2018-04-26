@@ -32,6 +32,7 @@ export LBM=$HOME/.julia/v0.6/LatticeBoltzmann
 export PATH=$PATH:$OPT/julia/
 export JULIA_NUM_THREADS=4
 
+setxkbmap -option grp:switch,grp:shift_toggle us,de 
 export PFUNIT=/usr/local
 alias la='ls -la --color=always' 
 export NVIM=$HOME/.config/nvim

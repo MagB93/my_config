@@ -262,6 +262,12 @@
 (use-package magit
   :ensure t
 )
+
+(use-package git-gutter-fringe
+  :ensure t
+  :config
+  (add-hook 'magit-mode-hook 'git-gutter-mode)
+)
 #+END_SRC
 
 * EVIL
@@ -347,7 +353,7 @@ Install EVIL (if not yet installed), and enable it.
         auto-mode-alist))
 )
 
-(setq c-default-style "bsd
+(setq c-default-style "bsd"
       c-basic-offset 2
       )
 
@@ -415,6 +421,7 @@ Install EVIL (if not yet installed), and enable it.
         ;; This function will turn lsp-mode on and call the command given to
         ;; start the LSP server.
         (add-hook 'prog-major-mode #'lsp-prog-major-mode-enable)
+        (add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
     )
 
     (use-package lsp-ui
@@ -442,11 +449,6 @@ Install EVIL (if not yet installed), and enable it.
     (push 'company-lsp company-backends)
   )
 
-  ;; (use-package lsp-imenu
-  ;;   :ensure t
-  ;;   :init
-  ;;   (add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
-  ;; )
 
 #+END_SRC
 ** Cquery
@@ -496,7 +498,7 @@ Install EVIL (if not yet installed), and enable it.
       (cquery-call-hierarchy t) ; callee hierarchy
       (cquery-inheritance-hierarchy nil) ; base hierarchy
       (cquery-inheritance-hierarchy t) ; derived hierarchy
-      (add-hook 'cpp-mode-hook 'lsp-cquery-enable)
+      (add-hook 'cpp-mode-hook #'lsp-cquery-enable)
   )
 #+END_SRC
 
