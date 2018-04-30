@@ -509,3 +509,8 @@ Install EVIL (if not yet installed), and enable it.
   :ensure t
 )
 #+END_SRC
+** Fortran
+#+BEGIN_SRC emacs-lisp
+(lsp-define-stdio-client lsp-fortls "f90" "" fortls)
+
+#+END_SRC
