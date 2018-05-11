@@ -48,6 +48,7 @@
  (show-paren-mode 1)
  (setq-default indicate-empty-line t)
  (setq visible-bell t)
+
 #+END_SRC
 
 
@@ -57,11 +58,15 @@
   (setq-default indent-tabs-mode nil)
   (setq-default tab-width 2)
 
-  ;; Make tab key call the indent command 
+  ;; Make tab key call the indent command
   (setq-default tab-always-indent t)
 
   ;; Make the tab key indent first then completion
   (setq-default tab-always-indent 'complete)
+  (setq-default show-trailing-whitespace t)
+    ;; Remove trailing-white space after save
+    (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 
 #+END_SRC
 
@@ -79,26 +84,39 @@
 
 ** Some advanced highlighting
  #+BEGIN_SRC emacs-lisp
- (use-package rainbow-delimiters
-   :ensure t
-   :config
-   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-   (add-hook 'org-mode-hook #'rainbow-delimiters-mode)
- )
+    (use-package rainbow-delimiters
+      :ensure t
+      :config
+      (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+      (add-hook 'org-mode-hook #'rainbow-delimiters-mode)
+    )
 
- (use-package rainbow-blocks
-   :ensure t
-   :config
-   (add-hook 'prog-mode-hook #'rainbow-blocks-mode)
- )
+    (use-package rainbow-blocks
+      :ensure t
+      :config
+      (add-hook 'prog-mode-hook #'rainbow-blocks-mode)
+    )
 
- (setq-default fill-column 120)
- (use-package fill-column-indicator
-   :ensure t
-   :config
-   (setq fci-rule-width 1)
-   (add-hook 'prog-mode-hook 'fci-mode)
- )
+    (setq-default fill-column 120)
+    (use-package fill-column-indicator
+      :ensure t
+      :config
+      (setq fci-rule-width 1)
+      (add-hook 'prog-mode-hook 'fci-mode)
+    )
+
+    (use-package highlight-indentation
+      :ensure t
+      :config
+      (set-face-background 'highlight-indentation-face "#e3e3d3")
+      (set-face-background 'highlight-indentation-current-column-face "#c3b3b3")
+      ;; (highlight-indentation-mode t)
+      ;; (highlight-indentation-current-column-mode t)
+      (add-hook 'prog-mode-hook #'highlight-indentation-mode)
+      (add-hook 'prog-mode-hook #'highlight-indentation-current-column-mode)
+      (add-hook 'org-mode-hook #'highlight-indentation-mode)
+      (add-hook 'org-mode-hook #'highlight-indentation-current-column-mode)
+   )
 
  #+END_SRC
 
@@ -121,15 +139,15 @@
     (add-hook 'prog-mode-hook 'smartparens-mode)
     (add-hook 'org-mode-hook 'smartparens-mode)
     )
-   
+
    #+END_SRC
 
-** IDO 
+** IDO
    #+BEGIN_SRC emacs-lisp
    (setq ido-enable-flex-matching t)
    (setq ido-everywhere t)
    (ido-mode 1)
-   
+
    #+END_SRC
 
 ** Eyebrowse
@@ -139,7 +157,7 @@
     :config
     (eyebrowse-mode t)
 )
-   
+
    #+END_SRC
 * Color theming
 ** Move the themes '.el' file into the 'themes' folder in the emacs config folder
@@ -148,19 +166,45 @@
 
   ;; (use-package leuven-theme
   ;;   :ensure t
-  ;;   :load-path "themes"
-  ;;   :config
-  ;;   (load-theme 'leuven t)
+  ;;   :init
+  ;;   ;; (load-theme 'leuven t)
   ;; )
-  (use-package anti-zenburn-theme
+  ;; (use-package anti-zenburn-theme
+  ;;   :ensure t
+  ;;   :init
+  ;;   ;; (load-theme 'anti-zenburn-theme t)
+  ;; )
+
+  (use-package spacemacs-theme
     :ensure t
-    :load-path "themes"
-    :config 
-    (load-theme 'anti-zenburn-theme t)
-  )
+    :init
+    (load-theme 'spacemacs-light t)
+   )
 #+END_SRC
 
-**
+* Markdown
+#+BEGIN_SRC emacs-lisp
+;; Markdown
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
+
+;; yaml
+(use-package yaml-mode
+  :ensure t)
+
+#+END_SRC
+
+* Flycheck
+#+BEGIN_SRC emacs-lisp
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(setq flycheck-check-syntax-automatically '(save))
+
+#+END_SRC
 
 * Hasklig
 #+BEGIN_SRC emacs-lisp
@@ -282,8 +326,6 @@ Install EVIL (if not yet installed), and enable it.
   (evil-mode 1)
 )
 
-
-
 (use-package evil-commentary
   :ensure t
   :config
@@ -299,6 +341,13 @@ Install EVIL (if not yet installed), and enable it.
   :config
   (add-hook 'smart-parens-enabled-hook #'evil-smartparens-mode)
 )
+
+(use-package evil-numbers
+ :ensure t)
+
+(define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
+
 #+END_SRC
 
 * Org-Mode
@@ -307,6 +356,12 @@ Install EVIL (if not yet installed), and enable it.
     :ensure t
     :config
     (add-hook 'org-mode-hook (lambda() (org-bullets-mode 1)))
+)
+
+(use-package evil-org
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook 'evil-org-mode)
 )
 #+END_SRC
 
@@ -357,9 +412,156 @@ Install EVIL (if not yet installed), and enable it.
       c-basic-offset 2
       )
 
+(use-package clang-format
+  :ensure t
+  :config
+  (global-set-key [C-M-tab] 'clang-format-region)
+)
 
 #+END_SRC
 
+* LaTeX
+  #+BEGIN_SRC emacs-lisp
+    (use-package flymake
+      :defer t
+      :ensure t
+      :config
+      (defun flymake-get-tex-args (file-name)
+      (list "pdflatex"
+      (list "-file-line-error" "-draftmode" "-interaction=nonstopmode" file-name))
+      (add-hook 'LaTeX-mode-hook 'flymake-mode))
+      (setq ispell-program-name "aspell") ; could be ispell as well, depending on your preferences
+      (setq ispell-dictionary "english") ; this can obviously be set to any language your spell-checking program supports
+    )
+
+    (use-package auctex
+      :defer t
+      :ensure t
+      :config
+      (setq TeX-auto-save t)
+      (setq TeX-parse-selt t)
+      (setq TeX-save-quere nil)
+      (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+      (add-hook 'LaTeX-mode-hook 'flyspell-buffer)
+      (setq TeX-PDF-mode t) ;; Make pdflatex the default backend
+
+      ;; Now we want to make the folding of sections possible
+      (defun turn-on-outline-minor-mode ()
+      (outline-minor-mode 1))
+      (add-hook 'LaTeX-mode-hook 'turn-on-outline-minor-mode)
+      (add-hook 'latex-mode-hook 'turn-on-outline-minor-mode)
+      (setq outline-minor-mode-prefix "\C-c \C-o") ; Or something else
+      ;; Hide all contents of the current section: C-c C-o C-l
+      ;; Move to the next unit of the document C-c C-o C-n
+      ;; Move to the previous unit of the document C-c C-o C-p
+      ;; See the entire document again C-c C-o C-a
+
+    )
+
+    (use-package reftex
+      :ensure t
+      :config
+      (autoload 'reftex-mode "reftex" "RefTeX Minor Mode" t)
+      (autoload 'turn-on-reftex "reftex" "RefTeX Minor Mode" nil)
+      (autoload 'reftex-citation "reftex-cite" "Make citation" nil)
+      (autoload 'reftex-index-phrase-mode "reftex-index" "Phrase Mode" t)
+      (add-hook 'latex-mode-hook 'turn-on-reftex) ; with Emacs latex mode
+      (add-hook 'reftex-load-hook 'imenu-add-menubar-index)
+      (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+
+        (setq LaTeX-eqnarray-label "eq"
+        LaTeX-equation-label "eq"
+        LaTeX-figure-label "fig"
+        LaTeX-table-label "tab"
+        LaTeX-myChapter-label "chap"
+        TeX-auto-save t
+        TeX-newline-function 'reindent-then-newline-and-indent
+        TeX-parse-self t
+        TeX-style-path
+        '("style/" "auto/"
+        "/usr/share/emacs21/site-lisp/auctex/style/"
+        "/var/lib/auctex/emacs21/"
+        "/usr/local/share/emacs/site-lisp/auctex/style/")
+        LaTeX-section-hook
+        '(LaTeX-section-heading
+        LaTeX-section-title
+        LaTeX-section-toc
+        LaTeX-section-section
+        LaTeX-section-label))
+    )
+
+  #+END_SRC
+* Haskell
+#+BEGIN_SRC emacs-lisp
+
+  (use-package hindent
+    :ensure t
+  )
+
+  (use-package flycheck-haskell
+    :ensure t
+    :config
+    (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
+    )
+
+  (use-package haskell-mode
+    :ensure t
+    :config
+    (add-hook 'haskell-mode-hook #'hindent-mode)
+    (add-hook 'haskell-mode-hook 'turn-on-haskell-unicode-input-method)
+    ;; We want to enable auto stylish-haskell, remember to install it with cabal!
+    (custom-set-variables '(haskell-stylish-on-save t))
+
+  )
+
+  ;; (add-to-load-path "~/.cabal/share/x86_64-linux-ghc-8.0.2/HaRe-0.8.4.1/elisp")
+  ;; (require 'hare)
+  ;; (autoload 'hare-init "hare" nil t)
+  ;; (add-hook 'haskell-mode-hook (lambda () (ghc-init) (hare-init)))
+
+  (use-package intero
+    :ensure t
+    :config
+    (add-hook 'haskell-mode-hook 'intero-mode)
+  )
+
+  (use-package ghci-completion
+    :ensure t
+    :config
+    (add-hook 'inferior-haskell-mode-hook 'turn-on-ghci-completion)
+  )
+
+  ; Remove the hard-coded 'literate-haskell-mode' activation for `.lhs' files that
+  ; haskell-mode comes with. In exchange, enable LaTeX mode whenever we open up a
+  ; `.lhs' file. Using mmm-mode, we will activate `haskell-mode' in the code
+  ; sections.
+  (setq auto-mode-alist
+    (remove
+      (rassoc 'literate-haskell-mode auto-mode-alist) auto-mode-alist))
+  (add-to-list 'auto-mode-alist '("\\.lhs$" . latex-mode))
+
+  (use-package mmm-mode
+    :ensure t
+    :init
+      (setq mmm-global-mode 't)
+      (setq mmm-submode-decoration-level 1)
+      (mmm-ify-by-class 'literate-haskell-latex)
+    :config
+      (mmm-add-classes
+      '((literate-haskell-latex
+          :submode haskell-mode
+          :front "^\\\\begin{code}\n"
+          :back "^\\\\end{code}"
+      )))
+
+  ; Re-fontify sub-mode portions when idle. The manual command for this is
+  ; `mmm-parse-buffer'. If you don't do this, then syntax highlighting won't work
+  ; for new regions of Haskell code in the \begin{code}...\end{code} blocks.
+  (setq mmm-parse-when-idle 't)
+
+  )
+
+#+END_SRC
 * Lisp
 #+BEGIN_SRC emacs-lisp
   ;; (require 'ac-slime)
@@ -509,8 +711,20 @@ Install EVIL (if not yet installed), and enable it.
   :ensure t
 )
 #+END_SRC
+
+** Haskell
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-haskell
+  :ensure t
+  :config
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+  (add-hook 'haskell-mode-hook #'lsp-haskell-enable)
+  (add-hook 'haskell-mode-hook 'flycheck-mode)
+)
+
+#+END_SRC
 ** Fortran
 #+BEGIN_SRC emacs-lisp
-(lsp-define-stdio-client lsp-fortls "f90" "" fortls)
+  ;; (lsp-define-stdio-client lsp-fortls "f90" "" fortls)
 
 #+END_SRC
