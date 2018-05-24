@@ -653,16 +653,32 @@ Install EVIL (if not yet installed), and enable it.
   (use-package mmm-mode
     :ensure t
     :init
-      (setq mmm-global-mode 't)
       (setq mmm-submode-decoration-level 1)
-      (mmm-ify-by-class 'literate-haskell-latex)
     :config
-      (mmm-add-classes
-      '((literate-haskell-latex
-          :submode haskell-mode
-          :front "^\\\\begin{code}\n"
-          :back "^\\\\end{code}"
-      )))
+    (add-hook 'haskell-mode-hook 'my-mmm-mode)
+
+    (mmm-add-classes
+    '((literate-haskell-bird
+    :submode text-mode
+    :front "^[^>]"
+    :include-front true
+    :back "^>\\|$"
+    )
+   (literate-haskell-latex
+    :submode literate-haskell-mode
+    :front "^\\\\begin{code}"
+    :front-offset (end-of-line 1)
+    :back "^\\\\end{code}"
+    :include-back nil
+    :back-offset (beginning-of-line -1)
+    )))
+
+(defun my-mmm-mode ()
+  ;; go into mmm minor mode when class is given
+  (make-local-variable 'mmm-global-mode)
+  (setq mmm-global-mode 'true))
+
+(setq mmm-submode-decoration-level 0)
 
   ; Re-fontify sub-mode portions when idle. The manual command for this is
   ; `mmm-parse-buffer'. If you don't do this, then syntax highlighting won't work
