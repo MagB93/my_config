@@ -227,22 +227,11 @@
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
-  ;; (use-package leuven-theme
-  ;;   :ensure t
-  ;;   :init
-  ;;   ;; (load-theme 'leuven t)
-  ;; )
-  ;; (use-package anti-zenburn-theme
-  ;;   :ensure t
-  ;;   :init
-  ;;   ;; (load-theme 'anti-zenburn-theme t)
-  ;; )
-
-  (use-package spacemacs-theme
+  (use-package leuven-theme
     :ensure t
-    :init
-    (load-theme 'spacemacs-light t)
-   )
+    :config
+    (load-theme 'leuven-theme t)
+  )
 #+END_SRC
 
 * Markdown
@@ -250,22 +239,33 @@
 ;; Markdown
 (use-package markdown-mode
   :ensure t
+  :defer t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
+#+END_SRC
+
+* Yaml
+#+BEGIN_SRC emacs-lisp
 ;; yaml
 (use-package yaml-mode
+  :defer t
   :ensure t)
 
 #+END_SRC
 
 * Flycheck
 #+BEGIN_SRC emacs-lisp
-(add-hook 'after-init-hook #'global-flycheck-mode)
-(setq flycheck-check-syntax-automatically '(save))
+(use-package flycheck
+  :ensure t
+  :defer t
+  :init (global-flycheck-mode)
+  :config
+  (setq flycheck-check-syntax-automatically '(save))
+)
 
 #+END_SRC
 
