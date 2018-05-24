@@ -198,8 +198,16 @@
     :config
     (eyebrowse-mode t)
 )
-
    #+END_SRC
+** Avy
+   Awesome Package to navigate the source code
+  #+BEGIN_SRC emacs-lisp
+  (use-package avy
+  :ensure t
+  :general
+    ("C-:" 'avy-goto-char)
+  )
+  #+END_SRC
 
 ** Otherstuff
 #+BEGIN_SRC emacs-lisp
