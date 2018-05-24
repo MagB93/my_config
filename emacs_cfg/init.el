@@ -1,10 +1,12 @@
 ;; add MELPA package server
-;; (package-initialize)
+(package-initialize)
 (require 'package)
 
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
+;; (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
+(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
 
 (setq package-enable-at-startup nil)
 
@@ -17,7 +19,7 @@
 
 ;; load org package and our emacs-config.org file
 (require 'org)
-(org-babel-load-file "~/.emacs.d/emacs-config.org") 
+(org-babel-load-file "~/.emacs.d/emacs-config.org")
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -25,6 +27,8 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
  '(custom-enabled-themes nil)
  '(haskell-font-lock-symbols t)
  '(haskell-font-lock-symbols-alist
@@ -103,8 +107,10 @@
            (decode-char 'ucs 57634))
      (cons "/="
            (decode-char 'ucs 57635)))))
+ '(haskell-stylish-on-save t)
+ '(hl-sexp-background-color "#efebe9")
  '(inhibit-startup-screen t)
- '(package-selected-packages '(cquery counsel evil use-package)))
+ '(package-selected-packages '(ess 0blayout cquery counsel evil use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

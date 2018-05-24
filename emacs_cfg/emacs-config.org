@@ -385,6 +385,8 @@ Install EVIL (if not yet installed), and enable it.
 (setq evil-want-C-u-scroll 't)
 (use-package evil
   :ensure t
+  :init
+  (setq evil-shift-width 2)
   :config
   (evil-mode 1)
 )
@@ -404,12 +406,6 @@ Install EVIL (if not yet installed), and enable it.
   :config
   (add-hook 'smart-parens-enabled-hook #'evil-smartparens-mode)
 )
-
-(use-package evil-numbers
- :ensure t)
-
-(define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
-(define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
 
 #+END_SRC
 
@@ -461,6 +457,10 @@ Install EVIL (if not yet installed), and enable it.
 
 * C/CPP
 #+BEGIN_SRC emacs-lisp
+
+;; Make c++-mode the default for *.h files
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
 (use-package cmake-mode
   :ensure t
   :config
@@ -469,6 +469,13 @@ Install EVIL (if not yet installed), and enable it.
         '(("CMakeLists\\.txt\\'" . cmake-mode))
         '(("\\.cmake\\'" . cmake-mode))
         auto-mode-alist))
+)
+
+(use-package cmake-font-lock
+  :ensure t
+  :config
+  (autoload 'cmake-font-lock-activate "cmake-font-lock" nil t)
+  (add-hook 'cmake-mode-hook 'cmake-font-lock-activate)
 )
 
 (setq c-default-style "bsd"
@@ -481,77 +488,117 @@ Install EVIL (if not yet installed), and enable it.
   (global-set-key [C-M-tab] 'clang-format-region)
 )
 
+(use-package function-args
+  :ensure t
+  :config
+  (fa-config-default))
+
 #+END_SRC
 
 * LaTeX
   #+BEGIN_SRC emacs-lisp
-    (use-package flymake
+      (use-package flymake
+        :defer t
+        :ensure t
+        :config
+        (defun flymake-get-tex-args (file-name)
+        (list "pdflatex"
+        (list "-file-line-error" "-draftmode" "-interaction=nonstopmode" file-name))
+        (add-hook 'LaTeX-mode-hook 'flymake-mode))
+        (setq ispell-program-name "aspell") ; could be ispell as well, depending on your preferences
+        (setq ispell-dictionary "english") ; this can obviously be set to any language your spell-checking program supports
+      )
+    (use-package tex
       :defer t
-      :ensure t
-      :config
-      (defun flymake-get-tex-args (file-name)
-      (list "pdflatex"
-      (list "-file-line-error" "-draftmode" "-interaction=nonstopmode" file-name))
-      (add-hook 'LaTeX-mode-hook 'flymake-mode))
-      (setq ispell-program-name "aspell") ; could be ispell as well, depending on your preferences
-      (setq ispell-dictionary "english") ; this can obviously be set to any language your spell-checking program supports
-    )
-
-    (use-package auctex
-      :defer t
-      :ensure t
+      :ensure auctex
+      :mode ("\\.tex\\'" . LaTeX-mode)
       :config
       (setq TeX-auto-save t)
-      (setq TeX-parse-selt t)
-      (setq TeX-save-quere nil)
-      (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-      (add-hook 'LaTeX-mode-hook 'flyspell-buffer)
-      (setq TeX-PDF-mode t) ;; Make pdflatex the default backend
+      (setq TeX-parse-self t)
+      (setq-default TeX-master nil)
+          (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+          (add-hook 'LaTeX-mode-hook 'flyspell-buffer)
+          (setq TeX-save-quere nil)
+          (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
+      (add-hook 'LaTeX-mode-hook
+                (lambda ()
+                  (rainbow-delimiters-mode)
+                  (company-mode)
+                  (smartparens-mode)
+                  (turn-on-reftex)
+                  (setq reftex-plug-into-AUCTeX t)
+                  (reftex-isearch-minor-mode)
+                  (setq TeX-PDF-mode t)
+                  (setq TeX-source-correlate-method 'synctex)
+                  (setq TeX-source-correlate-start-server t)))
 
-      ;; Now we want to make the folding of sections possible
-      (defun turn-on-outline-minor-mode ()
-      (outline-minor-mode 1))
-      (add-hook 'LaTeX-mode-hook 'turn-on-outline-minor-mode)
-      (add-hook 'latex-mode-hook 'turn-on-outline-minor-mode)
-      (setq outline-minor-mode-prefix "\C-c \C-o") ; Or something else
-      ;; Hide all contents of the current section: C-c C-o C-l
-      ;; Move to the next unit of the document C-c C-o C-n
-      ;; Move to the previous unit of the document C-c C-o C-p
-      ;; See the entire document again C-c C-o C-a
+          ;; Now we want to make the folding of sections possible
+          (defun turn-on-outline-minor-mode ()
+          (outline-minor-mode 1))
+          (add-hook 'LaTeX-mode-hook 'turn-on-outline-minor-mode)
+          (setq outline-minor-mode-prefix "\C-c \C-o") ; Or something else
+          ;; Hide all contents of the current section: C-c C-o C-l
+          ;; Move to the next unit of the document C-c C-o C-n
+          ;; Move to the previous unit of the document C-c C-o C-p
+          ;; See the entire document again C-c C-o C-a
 
-    )
+    ;; Update PDF buffers after successful LaTeX runs
+    (add-hook 'TeX-after-TeX-LaTeX-command-finished-hook
+               #'TeX-revert-document-buffer)
 
-    (use-package reftex
-      :ensure t
-      :config
-      (autoload 'reftex-mode "reftex" "RefTeX Minor Mode" t)
-      (autoload 'turn-on-reftex "reftex" "RefTeX Minor Mode" nil)
-      (autoload 'reftex-citation "reftex-cite" "Make citation" nil)
-      (autoload 'reftex-index-phrase-mode "reftex-index" "Phrase Mode" t)
-      (add-hook 'latex-mode-hook 'turn-on-reftex) ; with Emacs latex mode
-      (add-hook 'reftex-load-hook 'imenu-add-menubar-index)
-      (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+    ;; to use pdfview with auctex
+    (add-hook 'LaTeX-mode-hook 'pdf-tools-install)
 
-        (setq LaTeX-eqnarray-label "eq"
-        LaTeX-equation-label "eq"
-        LaTeX-figure-label "fig"
-        LaTeX-table-label "tab"
-        LaTeX-myChapter-label "chap"
-        TeX-auto-save t
-        TeX-newline-function 'reindent-then-newline-and-indent
-        TeX-parse-self t
-        TeX-style-path
-        '("style/" "auto/"
-        "/usr/share/emacs21/site-lisp/auctex/style/"
-        "/var/lib/auctex/emacs21/"
-        "/usr/local/share/emacs/site-lisp/auctex/style/")
-        LaTeX-section-hook
-        '(LaTeX-section-heading
-        LaTeX-section-title
-        LaTeX-section-toc
-        LaTeX-section-section
-        LaTeX-section-label))
-    )
+    ;; to use pdfview with auctex
+    (setq TeX-view-program-selection '((output-pdf "pdf-tools"))
+           TeX-source-correlate-start-server t)
+    (setq TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view"))))
+
+        ;; (require 'tex-site)
+        ;; (use-package auctex
+        ;;   :ensure t
+        ;;   :config
+        ;;   (add-to-list 'auto-mode-alist '("\\.tex$" . latex-mode))
+        ;;   (setq TeX-PDF-mode t) ;; Make pdflatex the default backend
+        ;;   (setq-default TeX-master "master") ;; All master files called "master"
+        ;;   ;; 2 spaces of indentation
+        ;;   (setq LaTeX-item-indent 0)
+        ;;   ;; Auto fill enviroment
+        ;;   (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
+        ;;   ;; Make the visual mode avialable
+        ;;   (add-hook 'LaTeX-mode-hook 'visual-line-mode)
+
+
+          (use-package reftex
+            :after latex
+            :ensure t
+            :config
+            (autoload 'reftex-mode "reftex" "RefTeX Minor Mode" t)
+            (autoload 'turn-on-reftex "reftex" "RefTeX Minor Mode" nil)
+            (autoload 'reftex-citation "reftex-cite" "Make citation" nil)
+            (autoload 'reftex-index-phrase-mode "reftex-index" "Phrase Mode" t)
+            (add-hook 'latex-mode-hook 'turn-on-reftex) ; with Emacs latex mode
+            (add-hook 'reftex-load-hook 'imenu-add-menubar-index)
+            (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+            (setq reftex-plug-into-AUCtex t)
+            (setq LaTeX-eqnarray-label "eq"
+            LaTeX-equation-label "eq"
+            LaTeX-figure-label "fig"
+            LaTeX-table-label "tab"
+            LaTeX-myChapter-label "chap"
+            TeX-auto-save t
+            TeX-newline-function 'reindent-then-newline-and-indent
+            TeX-parse-self t
+            LaTeX-section-hook
+            '(LaTeX-section-heading
+            LaTeX-section-title
+            LaTeX-section-toc
+            LaTeX-section-section
+            LaTeX-section-label))
+          )
+
+        (use-package company-auctex
+         :after (company latex))
 
   #+END_SRC
 * Haskell
