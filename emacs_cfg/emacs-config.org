@@ -89,14 +89,10 @@
 
 ** Line-Numbers
 #+BEGIN_SRC emacs-lisp
-(use-package linum-relative
-  :ensure t
-  :config
-  (global-linum-mode)
-  (linum-relative-on)
-  (setq linum-relative-current-symbol "")
-)
+(setq display-line-numbers 'relative
+      display-line-numbers-current-absolute t)
 
+(global-display-line-numbers-mode t)
 #+END_SRC
 
 ** Some advanced highlighting
@@ -223,9 +219,7 @@
 #+END_SRC
 
 * Color theming
-** Move the themes '.el' file into the 'themes' folder in the emacs config folder
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
   (use-package leuven-theme
     :ensure t
@@ -370,10 +364,15 @@
   :ensure t
 )
 
-(use-package git-gutter-fringe
+(use-package diff-hl
   :ensure t
+  :defer t
+  :init
+  (add-hook 'prog-mode-hook #'diff-hl-mode 'append)
+  (add-hook 'org-mode-hook #'diff-hl-mode 'append)
+  (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
   :config
-  (add-hook 'magit-mode-hook 'git-gutter-mode)
+  (diff-hl-flydiff-mode t)
 )
 #+END_SRC
 

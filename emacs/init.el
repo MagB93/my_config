@@ -75,4 +75,3 @@
 Otherwise, just insert the typed character."
   (interactive)
   (if (eolp) (let (parens-require-spaces) (insert-pair)) (self-insert-command 1)))
-
